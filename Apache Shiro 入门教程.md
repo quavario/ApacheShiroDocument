@@ -9,17 +9,21 @@
 - 在Apache Shiro的Git存储库中：[https](https://github.com/apache/shiro/tree/master/samples/quickstart)：[//github.com/apache/shiro/tree/master/samples/quickstart](https://github.com/apache/shiro/tree/master/samples/quickstart)
 - 在Apache Shiro的源代码发布`samples/quickstart`目录中。源分发可从“ [下载”](http://shiro.apache.org/download.html)页面获得。
 
+
+
 ### Setup 步骤
 
 在这个简单的例子中，我们将创建一个非常简单的命令行应用程序.
 
 >  **Shiro的通用性**
-
-Apache Shiro旨在适用于任何工作环境 - 从最小的命令行应用程序到庞大的集群Web项目。即使我们现在创建的是一个简单的应用程序，但要知道无论您的应用程序如何创建或部署位置，这个教程都是适用的。
+>
+>  Apache Shiro旨在适用于任何工作环境 - 从最小的命令行应用程序到庞大的集群Web项目。即使我们现在创建的是一个简单的应用程序，但要知道无论您的应用程序如何创建或部署位置，这个教程都是适用的。
 
 本教程需要Java 1.5或更高版本。我们将使用Apache [Maven](http://maven.apache.org/)作为构建工具
 
 对于本教程，请确保您使用的是Maven 2.2.1或更高版本。可通过`mvn --version` 查看当前版本：
+
+
 
 **测试Maven安装**
 
@@ -106,6 +110,8 @@ OS name: "mac os x" version: "10.6.7" arch: "x86_64" Family: "mac"
 </project>
 ```
 
+
+
 #### Tutorial类
 
 因为我们只是简单的运行一个命令行程序, 所以我们在`src/main/java`目录下创建一个Tutorial类,  然后创建main方法。
@@ -135,6 +141,8 @@ public class Tutorial {
 ```
 
 暂时不要担心import语句 - 我们很快就会找到它们。但就目前而言，我们有一个典型的命令行程序。这个程序会打印出文本“My First Apache Shiro Application”并退出。
+
+
 
 ### 测试运行
 
