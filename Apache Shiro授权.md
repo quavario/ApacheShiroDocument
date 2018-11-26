@@ -145,7 +145,7 @@ Shiro团队主张使用权限和显式角色而不是旧的隐式方法。您将
 
 例如，要查看a `Subject`是否具有特定（单个）角色，您可以调用该`subject.` [`hasRole(roleName)`](http://shiro.apache.org/static/current/apidocs/org/apache/shiro/subject/Subject.html#hasRole-java.lang.String-)方法，并做出相应的反应：
 
-```
+```java
 Subject currentUser = SecurityUtils.getSubject();
 
 if (currentUser.hasRole("administrator")) {
@@ -202,7 +202,7 @@ openBankAccount();
 
 例如，请考虑以下情形：`Printer`办公室中有一个具有唯一标识符的办公室`laserjet4400n`。我们的软件需要检查当前用户是否允许在该打印机上打印文档，然后才允许他们按下“打印”按钮。权限检查以确定是否可以这样表达：
 
-```
+```jaVA
 Permission printPermission = new PrinterPermission("laserjet4400n", "print");
 
 Subject currentUser = SecurityUtils.getSubject();
@@ -237,7 +237,7 @@ if (currentUser.isPermitted(printPermission)) {
 
 例如，根据上面的打印权限示例，我们可以将相同的检查重新制定为`String`基于权限的检查：
 
-```
+```java
 Subject currentUser = SecurityUtils.getSubject();
 
 if (currentUser.isPermitted("printer:print:laserjet4400n")) {

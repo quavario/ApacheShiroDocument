@@ -44,7 +44,7 @@
 
 ### 第1步：收集主体的身份和凭据
 
-```
+```java
 //Example using most common scenario of username/password pair:
 UsernamePasswordToken token = new UsernamePasswordToken(username, password);
 
@@ -64,7 +64,7 @@ token.setRememberMe(true);
 
 在收集了身份和凭据并为创建`AuthenticationToken`实例后，我们需要将令牌提交给Shiro以执行实际的身份验证：
 
-```
+```java
 Subject currentUser = SecurityUtils.getSubject();
 
 currentUser.login(token);
@@ -105,10 +105,10 @@ try {
 
 ## Remembered Me与认证
 
-如上例所示，除了正常的登录过程外，Shiro还支持“记住我”的概念。值得指出的是，Shiro在*记住的*主题和实际*认证的*主题之间做了非常精确的区分：
+如上例所示，除了正常的登录过程外，Shiro还支持“记住我”的概念。值得指出的是，Shiro在*记住的主体*和实际*认证的主体*之间做了非常精确的区分：
 
-- **记住**：记住`Subject`的不是匿名的，并且具有已知的身份（即`subject.getPrincipals()`非空）。但是，在**先前的**会话期间，先前的身份验证会记住此身份。如果`subject.`[`isRemembered()`](http://shiro.apache.org/static/current/apidocs/org/apache/shiro/subject/Subject.html#isRemembered--)返回，则认为主题被记住`true`。
-- **经过身份验证**：经过身份验证的`Subject`是*在Subject的当前会话期间*已成功通过身份验证的`login`方法（即，在不抛出异常的情况下调用该方法）。如果返回，则认为主题被认证。`subject.`[`isAuthenticated()`](http://shiro.apache.org/static/current/apidocs/org/apache/shiro/subject/Subject.html#isAuthenticated--)`true`
+- **记住我**：记住我的`Subject`不是匿名的，并且具有已知的身份（即`subject.getPrincipals()`非空）。但是，在**先前的**会话期间，先前的身份验证会记住此身份。如果`subject.`[`isRemembered()`](http://shiro.apache.org/static/current/apidocs/org/apache/shiro/subject/Subject.html#isRemembered--)返回，则认为主题被记住`true`。
+- **经过身份验证**：经过身份验证的`Subject`是*在Subject的当前会话期间*已成功通过身份验证的`login`方法（即，在不抛出异常的情况下调用该方法）。如果返回，则认为主体被认证。`subject.`[`isAuthenticated()`](http://shiro.apache.org/static/current/apidocs/org/apache/shiro/subject/Subject.html#isAuthenticated--)`true`
 
  
 
@@ -130,7 +130,7 @@ try {
 
 ### [一个说明的例子](http://shiro.apache.org/authentication.html#an-illustrating-example)
 
-以下是一个相当常见的场景，有助于说明为什么记住和验证之间的区别很重要。
+以下是一个相当常见的场景，有助于说明为什么记住我和验证之间的区别很重要。
 
 假设您正在使用[Amazon.com](https://www.amazon.com/)。您已成功登录并已将几本书添加到购物车中。但你必须去参加一个会议，但忘记退出。会议结束时，是时候回家了，你离开了办公室。
 
