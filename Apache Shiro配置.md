@@ -56,7 +56,7 @@ SecurityUtils.setSecurityManager(securityManager);
 
 例如，如果要将`SecurityManager`实例配置为使用自定义`SessionDAO`来自定义[会话管理](http://shiro.apache.org/session-management.html)，则可以`SessionDAO`使用嵌套的SessionManager `setSessionDAO`方法直接设置：
 
-```
+```java
 ...
 
 DefaultSecurityManager securityManager = new DefaultSecurityManager(realm);
@@ -92,7 +92,7 @@ Shiro支持[INI格式](https://en.wikipedia.org/wiki/INI_file)来构建`Security
 
 我们可以通过INI文件创建SecurityManager实例。可以通过文件路径，类路径或URL获取资源,  分别用`file:` , `classpath:` , `url:`  作为参数的前缀。本例中使用`IniSecurityManagerFactory` 从类路径的根目录中获取文件并返回`SecurityManager`实例
 
-```
+```java
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.util.Factory;
 import org.apache.shiro.mgt.SecurityManager;
@@ -111,7 +111,7 @@ SecurityUtils.setSecurityManager(securityManager);
 
 例如：
 
-```
+```java
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.util.Factory;
 import org.apache.shiro.mgt.SecurityManager;
@@ -321,11 +321,9 @@ anObject.map = $objectKey1:$objectValue1, $objectKey2:$objectValue2
 
  
 
-**注意 **
-
-------
-
-每个对象实例化和每个值赋值*按它们在[main]部分中出现的顺序*执行。这些信息最终转换为JavaBeans getter / setter方法调用，因此这些方法以相同的顺序调用！
+> **注意 **
+>
+> 每个对象实例化和每个值赋值*按它们在[main]部分中出现的顺序*执行。这些信息最终转换为JavaBeans getter / setter方法调用，因此这些方法以相同的顺序调用！
 
 写配置文件时请牢记这一点。
 
@@ -393,7 +391,7 @@ darkhelmet = ludicrousspeed, badguy, schwartz
 `username`= `password`，*roleName1*，*roleName2*，...，*roleNameN*
 
 - 等号左侧的值是用户名
-- 等号右侧的第一个值是用户的密码。密码是必需的。
+- 等号右侧  。密码是必需的。
 - 密码后面的任何逗号分隔值是分配给该用户的角色的名称。角色名称是可选的。
 
 ##### [加密密码](http://shiro.apache.org/configuration.html#encrypting-passwords)
@@ -402,11 +400,9 @@ darkhelmet = ludicrousspeed, badguy, schwartz
 
  
 
-简易安全密码
-
-------
-
-为了节省时间并使用最佳实践，您可能需要使用Shiro的[Command Line Hasher](http://shiro.apache.org/command-line-hasher.html)，它将散列密码以及任何其他类型的资源。加密INI `[users]`密码特别方便。
+> **简易安全密码**
+>
+> 为了节省时间并使用最佳实践，您可能需要使用Shiro的[Command Line Hasher](http://shiro.apache.org/command-line-hasher.html)，它将散列密码以及任何其他类型的资源。加密INI `[users]`密码特别方便。
 
 一旦指定了散列文本密码值，就必须告诉Shiro这些是加密的。您可以通过配置`iniRealm`[main]部分中隐式创建的方法来使用`CredentialsMatcher`与您指定的哈希算法相对应的适当实现：
 
@@ -441,7 +437,7 @@ sha256Matcher.storedCredentialsHexEncoded = false
 ```
 [roles]
 # 'admin' role has all permissions, indicated by the wildcard '*'
-admin = *
+admin = * 
 # The 'schwartz' role can do anything (*) with any lightsaber:
 schwartz = lightsaber:*
 # The 'goodguy' role is allowed to 'drive' (action) the winnebago (type) with
@@ -460,16 +456,12 @@ goodguy = winnebago:drive:eagle5
 
  
 
-内部逗号
-
-------
-
-请注意，如果单个*permissionDefinition*需要在内部以逗号分隔（例如`printer:5thFloor:print,info`），则需要用双引号（“）括起该定义以避免解析错误：`"printer:5thFloor:print,info"`
+> **内部逗号**
+>
+> 请注意，如果单个*permissionDefinition*需要在内部以逗号分隔（例如`printer:5thFloor:print,info`），则需要用双引号（“）括起该定义以避免解析错误：`"printer:5thFloor:print,info"`
 
  
 
-没有权限的角色
-
-------
-
-如果您的角色不需要权限关联，则不需要在[roles]部分中列出它们。只是在[users]部分中定义角色名称就足以创建角色（如果它尚不存在）。
+> **没有权限的角色**
+>
+> 如果您的角色不需要权限关联，则不需要在[roles]部分中列出它们。只是在[users]部分中定义角色名称就足以创建角色（如果它尚不存在）。
