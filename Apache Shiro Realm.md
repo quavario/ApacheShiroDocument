@@ -1,3 +1,9 @@
+---
+typora-copy-images-to: image
+---
+
+
+
 # Apache ShiroRealm
 
 - [Realm配置](http://shiro.apache.org/realm.html#Realm-RealmConfiguration)
@@ -15,6 +21,8 @@
 - [Realm授权](http://shiro.apache.org/realm.html#Realm-RealmAuthorization)
   - [基于角色的授权](http://shiro.apache.org/realm.html#Realm-RoleBasedAuthorization)
   - [基于权限的授权](http://shiro.apache.org/realm.html#Realm-PermissionBasedAuthorization)
+
+****
 
  `Realm`是可以访问特定于应用程序的安全数据（如用户，角色和权限）的组件。`Realm`将这些数据转换成Shiro支持的形式,  所以无论有多少数据或者,  数据是什么样的格式,  我们都可以通过subject API进行操作。
 
@@ -148,11 +156,11 @@ Shiro的所有可以直接使用的`Realm 实例`都默认使用[SimpleCredentia
 
 #### `doCredentialsMatch`方法
 
-![1543377223317](C:\Users\Administrator\AppData\Local\Temp\1543377223317.png)
+![](D:\Dev\Shiro文档\ApacheShiroDocument\image/1543377223317.png)
 
 #### `equals`方法
 
-![1543377310940](C:\Users\Administrator\AppData\Local\Temp\1543377310940.png)
+![](C:\Users\Administrator\AppData\Local\Temp\1543377310940.png)
 
 例如，如果提交了[UsernamePasswordToken](http://shiro.apache.org/static/current/apidocs/org/apache/shiro/authc/UsernamePasswordToken.html)，则`SimpleCredentialsMatcher`验证提交的密码是否与存储在数据库中的密码完全相同。
 
