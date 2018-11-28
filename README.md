@@ -17,7 +17,7 @@
 2. 核心
    - [x] [认证](https://github.com/quavario/ApacheShiroDocument/blob/master/Apache%20Shiro%E8%BA%AB%E4%BB%BD%E9%AA%8C%E8%AF%81.md)
    - [x] [授权](https://github.com/quavario/ApacheShiroDocument/blob/master/Apache%20Shiro%E6%8E%88%E6%9D%83.md)
-     - 权限
+     - [x] [权限](https://github.com/quavario/ApacheShiroDocument/blob/master/Apache%20Shiro%E7%9A%84%E6%9D%83%E9%99%90%E6%8E%A7%E5%88%B6.md)
    - [ ] Realms
    - [ ] 会话管理
    - [ ] 加密
