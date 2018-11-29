@@ -1,9 +1,3 @@
----
-typora-copy-images-to: image
----
-
-
-
 # Apache ShiroRealm
 
 - [Realm配置](http://shiro.apache.org/realm.html#Realm-RealmConfiguration)
@@ -156,11 +150,11 @@ Shiro的所有可以直接使用的`Realm 实例`都默认使用[SimpleCredentia
 
 #### `doCredentialsMatch`方法
 
-![](D:\Dev\Shiro文档\ApacheShiroDocument\image/1543377223317.png)
+![](image/1543377223317.png)
 
 #### `equals`方法
 
-![](C:\Users\Administrator\AppData\Local\Temp\1543377310940.png)
+![](image/1543377310940.png)
 
 例如，如果提交了[UsernamePasswordToken](http://shiro.apache.org/static/current/apidocs/org/apache/shiro/authc/UsernamePasswordToken.html)，则`SimpleCredentialsMatcher`验证提交的密码是否与存储在数据库中的密码完全相同。
 
@@ -260,7 +254,7 @@ myRealm.credentialsMatcher = $credentialsMatcher
 
 当在Subject调用`isPermitted()`或`checkPermission()`方法时：
 
-1. `Subject` 委托SecurityManager的进行权限校验![1543396670800](C:\Users\Administrator\AppData\Local\Temp\1543396670800.png)
+1. `Subject` 委托SecurityManager的进行权限校验![1543396670800](image/1543396670800.png)
 
 2. `SecurityManager` 委托给 Authorizer 
 
