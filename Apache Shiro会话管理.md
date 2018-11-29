@@ -199,13 +199,13 @@ securityManager.cacheManager = $cacheManager
 
 ##### [EHCache会话缓存配置](http://shiro.apache.org/session-management.html#ehcache-session-cache-configuration)
 
-默认情况下，`EhCacheManager`使用特定于Shiro的[`ehcache.xml`](https://github.com/apache/shiro/blob/master/support/ehcache/src/main/resources/org/apache/shiro/cache/ehcache/ehcache.xml)文件来设置会话缓存区域和必要的设置，以确保正确存储和检索会话。
+默认情况下，`EhCacheManager`使用特定于Shiro的[`ehcache.xml`](https://github.com/apache/shiro/blob/master/support/ehcache/src/main/resources/org/apache/shiro/cache/ehcache/ehcache.xml)文件来设置session缓存区域和必要的设置，以确保正确存储和检索session。
 
 但是，如果您希望更改缓存设置或配置自己的`ehcache.xml`或EHCache `net.sf.ehcache.CacheManager`实例，则需要配置缓存区域以确保正确处理Sessions。
 
 如果查看默认[`ehcache.xml`](https://github.com/apache/shiro/blob/master/support/ehcache/src/main/resources/org/apache/shiro/cache/ehcache/ehcache.xml)文件，您将看到以下`shiro-activeSessionCache`缓存配置：
 
-```
+```xml
 <cache name="shiro-activeSessionCache"
        maxElementsInMemory="10000"
        overflowToDisk="true"
@@ -229,7 +229,7 @@ securityManager.cacheManager = $cacheManager
 
 **配置在shiro.ini四郎的活动会话高速缓存名** <
 
-```
+```ini
 ...
 sessionDAO = org.apache.shiro.session.mgt.eis.EnterpriseCacheSessionDAO
 sessionDAO.activeSessionsCacheName = myname
@@ -248,7 +248,7 @@ Shiro的`SessionDAO`实现使用内部[`SessionIdGenerator`](http://shiro.apache
 
 **在shiro.ini中配置SessionIdGenerator**
 
-```
+```ini
 [main]
 ...
 sessionIdGenerator = com.my.session.SessionIdGenerator
@@ -273,7 +273,7 @@ securityManager.sessionManager.sessionDAO.sessionIdGenerator = $sessionIdGenerat
 
 **shiro.ini中的ExecutorServiceSessionValidationScheduler间隔**
 
-```
+```ini
 [main]
 ...
 sessionValidationScheduler = org.apache.shiro.session.mgt.ExecutorServiceSessionValidationScheduler
