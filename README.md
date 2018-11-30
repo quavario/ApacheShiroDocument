@@ -20,7 +20,7 @@
      - [x] [权限](https://github.com/quavario/ApacheShiroDocument/blob/master/Apache%20Shiro%E7%9A%84%E6%9D%83%E9%99%90%E6%8E%A7%E5%88%B6.md)
    - [x] [Realms](https://github.com/quavario/ApacheShiroDocument/blob/master/Apache%20Shiro%20Realm.md)
    - [x] [会话管理](https://github.com/quavario/ApacheShiroDocument/blob/master/Apache%20Shiro%E4%BC%9A%E8%AF%9D%E7%AE%A1%E7%90%86.md) (11月30日更新)
-   - [ ] 加密
+   - [x] [加密](https://github.com/quavario/ApacheShiroDocument/blob/master/Apache%20Shiro%E5%8A%A0%E5%AF%86.md)(11月30日更新)
 3. Web应用
    - Web
      - [ ] 配置
