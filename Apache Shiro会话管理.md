@@ -201,7 +201,11 @@ securityManager.cacheManager = $cacheManager
 
 默认情况下，`EhCacheManager`使用特定于Shiro的[`ehcache.xml`](https://github.com/apache/shiro/blob/master/support/ehcache/src/main/resources/org/apache/shiro/cache/ehcache/ehcache.xml)文件来设置session缓存区域和必要的设置，以确保正确存储和检索session。
 
-但是，如果您希望更改缓存设置或配置自己的`ehcache.xml`或EHCache `net.sf.ehcache.CacheManager`实例，则需要配置缓存区域以确保正确处理Sessions。
+> 译者:  ehcache.xml可以在shiro-ehcache包下找到,  这是默认的ehcache配置, 如图
+>
+> ![](image\1543539412322.png)
+
+但是，如果您希望更改缓存设置或配置自己的`ehcache.xml`或EHCache `net.sf.ehcache.CacheManager`实例，则需要配置`<cache>`以确保正确处理Session。
 
 如果查看默认[`ehcache.xml`](https://github.com/apache/shiro/blob/master/support/ehcache/src/main/resources/org/apache/shiro/cache/ehcache/ehcache.xml)文件，您将看到以下`shiro-activeSessionCache`缓存配置：
 
@@ -216,16 +220,20 @@ securityManager.cacheManager = $cacheManager
        diskExpiryThreadIntervalSeconds="600"/>
 ```
 
-如果您希望使用自己的`ehcache.xml`文件，请确保为Shiro的需要定义了类似的缓存条目。您最有可能更改`maxElementsInMemory`属性值以满足您的需求。但是，在您自己的配置中至少存在以下两个属性（并且不会更改）非常重要：
+如果您希望使用自己的`ehcache.xml`文件，请确保定义了类似得cache标签。您有可能更改`maxElementsInMemory`属性值以满足您的需求。但是，在您自己的配置中至少需要以下两个属性（并且不会更改）非常重要：
 
 - `overflowToDisk="true"` - 这确保了如果用完进程内存，会话将不会丢失并可以序列化到磁盘
-- `eternal="true"` - 确保缓存中的缓存条目（会话实例）永远不会过期或自动清除。这是必要的，因为Shiro基于预定的流程进行自己的验证（请参阅下面的“会话验证和调度”）。如果我们关闭它，缓存可能会在没有Shiro知道的情况下驱逐Sessions，这可能会导致问题。
+- `eternal="true"` - 确保缓存中的缓存条目（session实例）永远不会过期或自动清除。这是必要的，因为Shiro基于预定的流程进行自己的验证（请参阅下面的“会话验证和调度”）。如果我们关闭它，缓存可能会在没有Shiro知道的情况下驱逐Sessions，这可能会导致问题。
 
-##### [EHCache会话缓存名称](http://shiro.apache.org/session-management.html#ehcache-session-cache-name)
+##### EHCache Session Cache Name
 
-默认情况下，`EnterpriseCacheSessionDAO`询问`CacheManager`了`Cache`名为“ `shiro-activeSessionCache`”。`ehcache.xml`如上所述，期望配置该缓存名称/区域。
+默认情况下，`EnterpriseCacheSessionDAO`询问`CacheManager`了`Cache`名为“ `shiro-activeSessionCache`”。这个名字需要配置在`<cache>`  标签的name属性上。
 
-如果要使用其他名称而不是此默认名称，可以在其上配置该名称`EnterpriseCacheSessionDAO`，例如：
+> 译者:  我们可以从`EnterpriseCacheSessionDAO` 的父类 `CachingSessionDAO` 看到默认的cache的name属性
+>
+> ![](image\1543540129327.png)
+
+如果要使用其他名称而不是此默认名称，可以配置`EnterpriseCacheSessionDAO` 的`activeSessionsCacheName` 属性， 例如：
 
 **配置在shiro.ini四郎的活动会话高速缓存名** <
 
@@ -238,13 +246,15 @@ sessionDAO.activeSessionsCacheName = myname
 
 只要确保在相应的条目`ehcache.xml`匹配的名字和你配置`overflowToDisk="true"`和`eternal="true"`如上所述。
 
-#### [自定义会话ID](http://shiro.apache.org/session-management.html#custom-session-ids)
+#### 自定义Session ID
 
-Shiro的`SessionDAO`实现使用内部[`SessionIdGenerator`](http://shiro.apache.org/static/current/apidocs/org/apache/shiro/session/mgt/eis/SessionIdGenerator.html)组件在每次创建新会话时生成新的会话ID。生成ID，分配给新创建的`Session`实例，然后`Session`通过`SessionDAO`。
+Shiro的`SessionDAO`实现使用SessionIdGenerator组件在每次创建新session时生成新的session ID。生成ID后，分配给新创建的`Session`实例，然后`Session`通过`SessionDAO` 存储到内存或磁盘中。
 
-默认`SessionIdGenerator`值为a [`JavaUuidSessionIdGenerator`](http://shiro.apache.org/static/current/apidocs/org/apache/shiro/session/mgt/eis/JavaUuidSessionIdGenerator.html)，它`String`基于Java 生成ID [`UUIDs`](http://download.oracle.com/javase/6/docs/api/java/util/UUID.html)。此实现适用于所有生产环境。
+默认session id 生成器 是 [`JavaUuidSessionIdGenerator`](http://shiro.apache.org/static/current/apidocs/org/apache/shiro/session/mgt/eis/JavaUuidSessionIdGenerator.html)，它基于Java  [`UUIDs`](http://download.oracle.com/javase/6/docs/api/java/util/UUID.html)生成ID字符串  。此实现适用于所有生产环境。
 
-如果这不符合您的需求，您可以`SessionIdGenerator`在Shiro的`SessionDAO`实例上实现接口并配置实现。例如，在`shiro.ini`：
+![](image\1543541006078.png)
+
+如果这不符合您的需求，您可以手动实现 `SessionIdGenerator` 接口,  然后配置在shiro的SessionDAO实例上。例如，在`shiro.ini`：
 
 **在shiro.ini中配置SessionIdGenerator**
 
@@ -255,21 +265,21 @@ sessionIdGenerator = com.my.session.SessionIdGenerator
 securityManager.sessionManager.sessionDAO.sessionIdGenerator = $sessionIdGenerator
 ```
 
-### 会话验证和调度
+### Session验证和调度
 
-必须验证会话，以便可以从会话数据存储中删除任何无效（已过期或已停止）的会话。这可确保数据存储不会随着时间的推移而填满永远不会再次使用的会话。
+必须验证Session，以便可以从session存储器(可能是数据库或者NOSQL数据库或内存)中删除任何无效（已过期或已停止）的session。这可确保数据存储不会随着时间的推移而填满永远不会再次使用的会话。
 
-出于性能原因，`Sessions`仅验证它们在访问时是否已停止或过期（即`subject.getSession()`）。这意味着如果没有额外的定期定期验证，`Session`孤儿就会开始填满会话数据存储。
+出于性能原因，`Sessions`仅在被访问时验证是否已停止或过期（调用`subject.getSession()`）。这意味着如果没有额外的定期定期验证，`Session`孤儿就会开始填满会话数据存储。
 
-说明孤儿的常见示例是Web浏览器场景：假设用户登录到Web应用程序并创建会话以保留数据（身份验证状态，购物车等）。如果用户在应用程序不知情的情况下没有注销并关闭浏览器，那么他们的会话基本上只是在会话数据存储中“孤立”（孤立）。在`SessionManager`没有检测到用户不再使用其浏览器的方式，会话决不会再次访问（它是孤立的）。
+对孤儿的常见解释是Web浏览器场景：假设用户登录到Web应用程序并创建session以保留数据（身份验证状态，购物车等）。如果用户在应用程序不知情的情况下没有注销并关闭浏览器，那么他们的session基本上在数据存储中是“孤立”状态。`SessionManager`检测不到用户不再使用浏览器，session永远不会被访问到（它是孤立的）。
 
-会话孤儿，如果没有定期清除，将填满会话数据存储（这将是不好的）。因此，为了防止孤儿堆积，这些`SessionManager`实现支持a的概念[`SessionValidationScheduler`](http://shiro.apache.org/static/current/apidocs/org/apache/shiro/session/mgt/SessionValidationScheduler.html)。A `SessionValidationScheduler`负责定期验证会话，以确保在必要时对其进行清理。
+如果没有定期清除session孤儿，session将填满session存储器。因此，为了防止session堆积，这些`SessionManager`实现支持`SessionValidationScheduler` 的概念。 `SessionValidationScheduler`负责定期验证会话，以确保在必要时对其进行清理。
 
-#### [默认SessionValidationScheduler](http://shiro.apache.org/session-management.html#default-sessionvalidationscheduler)
+#### 默认SessionValidationScheduler
 
-`SessionValidationScheduler`在所有环境中都可使用的默认值是[`ExecutorServiceSessionValidationScheduler`](http://shiro.apache.org/static/current/apidocs/org/apache/shiro/session/mgt/ExecutorServiceSessionValidationScheduler.html)使用JDK [`ScheduledExecutorService`](http://docs.oracle.com/javase/6/docs/api/java/util/concurrent/ScheduledExecutorService.html)来控制验证发生的频率。
+`SessionValidationScheduler`在所有环境中都可使用的默认值`ExecutorServiceSessionValidationScheduler` 这个对象使用JDK 的 [`ScheduledExecutorService`](http://docs.oracle.com/javase/6/docs/api/java/util/concurrent/ScheduledExecutorService.html) 对象来控制验证频率。
 
-默认情况下，此实现将每小时执行一次验证。您可以通过指定**新**实例`ExecutorServiceSessionValidationScheduler`并指定不同的时间间隔（以毫秒为单位）来更改验证发生的速率：
+此实现默认每小时执行一次验证。您可以通过指定一个`ExecutorServiceSessionValidationScheduler` 实例,  并设置不同的时间间隔（以毫秒为单位）来更改验证发频率：
 
 **shiro.ini中的ExecutorServiceSessionValidationScheduler间隔**
 
@@ -277,113 +287,103 @@ securityManager.sessionManager.sessionDAO.sessionIdGenerator = $sessionIdGenerat
 [main]
 ...
 sessionValidationScheduler = org.apache.shiro.session.mgt.ExecutorServiceSessionValidationScheduler
-# Default is 3,600,000 millis = 1 hour:
+# 默认 3,600,000 毫秒 = 1 小时:
 sessionValidationScheduler.interval = 3600000
 
 securityManager.sessionManager.sessionValidationScheduler = $sessionValidationScheduler
 ```
 
-#### [自定义SessionValidationScheduler](http://shiro.apache.org/session-management.html#custom-sessionvalidationscheduler)
+#### Custom SessionValidationScheduler
 
-如果要提供自定义`SessionValidationScheduler`实现，可以将其指定为默认`SessionManager`实例的属性。例如，在`shiro.ini`：
+如果要自定义`SessionValidationScheduler`实现，可以将其指定为`SessionManager`实例的属性。例如，在`shiro.ini`：
 
 **在shiro.ini中配置自定义SessionValidationScheduler**
 
-```
+```ini
 [main]
 ...
 sessionValidationScheduler = com.foo.my.SessionValidationScheduler
 securityManager.sessionManager.sessionValidationScheduler = $sessionValidationScheduler
 ```
 
-#### [禁用会话验证](http://shiro.apache.org/session-management.html#disabling-session-validation)
+#### Disabling Session Validation
 
-在某些情况下，您可能希望完全禁用会话验证，因为您已在Shiro的控件之外设置了一个进程来为您执行验证。例如，您可能正在使用企业缓存并依赖缓存的生存时间设置来自动清除旧会话。或者，您可能已设置了一个cron作业来自动清除自定义数据存储。在这些情况下，您可以关闭会话验证计划：
+在某些情况下，您可能希望完全禁用会话验证，因为,  您已经配置了一个进程来为您执行验证。例如，您可能正在使用企业缓存并依赖缓存的生存时间设置来自动清除旧session。或者，您可能已设置了一个定时任务来自动清除自定义数据存储。在这些情况下，您可以关闭session验证调度：
 
 **在shiro.ini中禁用会话验证调度**
 
-```
+```ini
 [main]
 ...
 securityManager.sessionManager.sessionValidationSchedulerEnabled = false
 ```
 
-从会话数据存储中检索会话时仍会验证会话，但这将禁用Shiro的定期验证。
+从存储系统中获取session时,  session仍然会执行验证，但是,  上述设置将会关闭session的定时验证。
 
  
 
-在*某处*启用会话验证
+> **强烈推荐开启session定时验证**
+>
+> 如果您关闭Shiro的session验证调度程序，您*必须*通过其他一些机制（定时任务等）执行定期session验证。这是保证Session孤儿不填满数据存储的唯一方法。
 
-------
+#### 关闭自动删除无效session
 
-如果您关闭Shiro的会话验证调度程序，您*必须*通过其他一些机制（cron作业等）执行定期会话验证。这是保证Session孤儿不填满数据存储的唯一方法。
+如上所述，session定期验证的目的主要是删除所有无效（已过期或已停止）的会话，以确保它们不会填满存储系统。
 
-#### [会话删除无效](http://shiro.apache.org/session-management.html#invalid-session-deletion)
+默认情况下，每当Shiro检测到无效会话时，它都会尝试通过该`SessionDAO.delete(session)`方法将其从存储系统删除。对于大多数应用程序来说，这是一种很好的做法，可确不会占满存储系统。
 
-如上所述，定期会话验证的目的主要是删除任何无效（已过期或已停止）的会话，以确保它们不会填满会话数据存储。
-
-默认情况下，每当Shiro检测到无效会话时，它都会尝试通过该`SessionDAO.delete(session)`方法将其从基础会话数据存储中删除。对于大多数应用程序来说，这是一种很好的做法，可确保会话数据存储空间不会耗尽。
-
-但是，某些应用程序可能不希望Shiro自动删除会话。例如，如果应用程序提供了`SessionDAO`支持可查询数据存储的应用程序，则应用程序团队可能希望旧的或无效的会话在一段时间内可用。这将允许团队针对数据存储运行查询，以查看用户在上周创建的会话数，或用户会话的平均持续时间，或类似的报告类型查询。
+但是，某些应用程序可能不希望Shiro自动删除会话。例如，如果应用程序提供了支持查询数据存储的`SessionDAO`，则团队可能希望旧的或无效的会话在一段时间内可用。以便团队根据存储数据进行查询，例如: 查看用户在上周创建的session数，或用户session的平均持续时间，或类似的报告类型查询。
 
 在这些情况下，您可以完全关闭无效会话删除。例如，在`shiro.ini`：
 
 **在shiro.ini中禁用无效会话删除**
 
-```
+```ini
 [main]
 ...
 securityManager.sessionManager.deleteInvalidSessions = false
 ```
 
-不过要小心！如果关闭此功能，则您有责任确保会话数据存储不会耗尽其空间。您必须自己从数据存储中删除无效会话！
+如果关闭此功能，则您需要确保会话数据存储不会耗尽其空间。您必须自己从数据存储中删除无效session！
 
-另请注意，即使您阻止Shiro删除无效会话，您仍应以某种方式启用会话验证 - 通过Shiro现有的验证机制或您自己提供的自定义机制（请参阅上面的“禁用会话验证”部分以获取更多信息）。验证机制将更新您的会话记录以反映无效状态（例如，当它被无效时，上次访问时等），即使您将在其他时间自己手动删除它们。
+另请注意，即使您阻止Shiro删除无效会话，您依然需要启用session验证 （请参阅上面的“禁用session验证”部分以获取更多信息）。验证机制将更新您的会话记录以反映无效状态（例如，当它被无效时，上次访问时等）。
 
- 
+> **Warning**
+>
+> 如果禁用了shiro的自动删除无效session，那么你必须确保session的存储系统不会被耗尽。您必须自己从存储系统中删除无效session！
+>
+> 另外请注意，禁用自动删除无效session和禁用session定时验证不同。你必须开启session定时验证 - 无论是shiro自动实现或者自定义验证机制。
 
-警告
+## Session集群
 
-------
-
-如果您配置Shiro以便它不会删除无效会话，则您有责任确保会话数据存储不会耗尽其空间。您必须自己从数据存储中删除无效会话！
-
-另外请注意，禁用会话缺失是**不**一样的禁用会话验证调度。您应该几乎总是使用会话验证调度机制 - 直接由Shiro或您自己支持的机制。
-
-## [会话群集](http://shiro.apache.org/session-management.html#session-clustering)
-
-Apache Shiro会话功能的一个非常令人兴奋的事情是，您可以本地群集主题会话，而不必再担心如何根据容器环境群集会话。也就是说，如果您使用Shiro的本地会话并配置会话群集，您可以在开发中部署到Jetty或Tomcat，在生产中或任何其他环境中部署到JBoss或Geronimo - 同时从不担心容器/环境特定群集设置或配置。在Shiro中配置一次会话群集，无论您的部署环境如何，它都可以正常运行。
+Apache Shiro session功能中一个非常令人兴奋的事情是，你可以创建本地session集群，而不必再担心如何根据容器环境配置session集群。也就是说，如果您使用Shiro的本地session并配置session群集，您可以在开发中部署到Jetty或Tomcat，在生产中或任何其他环境中部署到JBoss或Geronimo - 同时从不担心容器/环境设置或配置。在Shiro中配置一次session群集，无论您的部署环境如何，它都可以正常运行。
 
 那么它是怎样工作的？
 
-由于Shiro基于POJO的N层架构，启用会话群集就像在会话持久性级别启用群集机制一样简单。也就是说，如果您配置了支持群集的功能[`SessionDAO`](http://shiro.apache.org/session-management.html#SessionManagement-sessionstorage)，DAO可以与群集机制进行交互，而Shiro `SessionManager`从不需要了解群集问题。
+由于Shiro基于POJO的N层架构，启用session群集非常简单。也就是说，如果您配置了支持群集的功能[`SessionDAO`](http://shiro.apache.org/session-management.html#SessionManagement-sessionstorage)，DAO可以与群集机制进行交互，而`SessionManager`从不需要了解群集。
 
 **分布式缓存**
 
-分布式缓存（如[Ehcache + TerraCotta](http://www.ehcache.org/documentation/2.7/configuration/distributed-cache-configuration.html)，[GigaSpaces ](http://www.gigaspaces.com/)[Oracle Coherence](http://www.oracle.com/technetwork/middleware/coherence/overview/index.html)和[Memcached](http://memcached.org/)（以及许多其他））已经解决了分布式数据在持久性级别的问题。因此，在Shiro中启用会话群集就像配置Shiro以使用分布式缓存一样简单。
+分布式缓存（如[Ehcache + TerraCotta](http://www.ehcache.org/documentation/2.7/configuration/distributed-cache-configuration.html)，[GigaSpaces ](http://www.gigaspaces.com/)[Oracle Coherence](http://www.oracle.com/technetwork/middleware/coherence/overview/index.html)和[Memcached](http://memcached.org/)（以及许多其他））已经解决了分布式数据在持久层的问题。因此，在Shiro中启用session群集就像配置Shiro以使用分布式缓存一样简单。
 
-这使您可以灵活地选择适合*您*环境的精确聚类机制。
+这使您可以选择合适的集群机制。
 
- 
+> **缓存空间**
+>
+> 请注意，当启用分布式/企业高速缓存作为session群集数据存储时，必须满足以下两种情况之一：
+>
+> - 分布式缓存具有足够的内存以存储所有活动的session
+> - 如果分布式缓存没有足够的内存存储活动的session，则它必须支持磁盘溢出，以防session丢失。
+>
+> 缓存无法支持这两种情况中的任何一种都会导致会话随机丢失。
 
-高速缓存存储器
+### EnterpriseCacheSessionDAO
 
-------
-
-请注意，当启用分布式/企业高速缓存作为会话群集数据存储时，必须满足以下两种情况之一：
-
-- 分布式缓存具有足够的群集范围内存以保留_all_活动/当前会话
-- 如果分布式缓存没有足够的群集范围内存来保留所有活动会话，则它必须支持磁盘溢出，因此会话不会丢失。
-
-缓存无法支持这两种情况中的任何一种都会导致会话随机丢失，这可能会让最终用户感到沮丧。
-
-### [EnterpriseCacheSessionDAO](http://shiro.apache.org/session-management.html#enterprisecachesessiondao)
-
-正如您所料，Shiro已经提供了一种`SessionDAO`将数据保存到企业/分布式缓存的实现。所述[EnterpriseCacheSessionDAO](http://shiro.apache.org/static/current/apidocs/org/apache/shiro/session/mgt/eis/EnterpriseCacheSessionDAO.html)需要一个四郎`Cache`或`CacheManager`要在其上配置为使得它可以利用缓存机制。
+正如您所料，Shiro已经提供了一种`SessionDAO`将数据保存到企业或分布式缓存的实现。`EnterpriseCacheSessionDAO`需要配置一个`Cache`或`CacheManager `可以利用缓存机制。
 
 例如，在`shiro.ini`：
 
-```
+```ini
 #This implementation would use your preferred distributed caching product's APIs:
 activeSessionsCache = my.org.apache.shiro.cache.CacheImplementation
 
@@ -393,11 +393,11 @@ sessionDAO.activeSessionsCache = $activeSessionsCache
 securityManager.sessionManager.sessionDAO = $sessionDAO
 ```
 
-虽然您可以`Cache`直接将实例注入到`SessionDAO`如上所示，但通常配置一个通用`CacheManager`以用于所有Shiro的缓存需求（会话以及身份验证和授权数据）更为常见。在这种情况下，`Cache`您可以告诉应该用于存储活动会话`EnterpriseCacheSessionDAO`的缓存名称，而不是直接配置实例`CacheManager`。
+如上所示，虽然您可以直接将`Cache`实例注入到`SessionDAO`  ,   但通常配置一个通用`CacheManager`以用于所有Shiro的缓存需求（会话以及身份验证和授权数据）更为常见。在这种情况下，  您可以告诉应该用于存储活动session 的`EnterpriseCacheSessionDAO`的缓存名称，而不是直接配置`Cache`实例。
 
 例如：
 
-```
+```ini
 # This implementation would use your caching product's APIs:
 cacheManager = my.org.apache.shiro.cache.CacheManagerImplementation
 
@@ -418,23 +418,25 @@ securityManager.cacheManager = $cacheManager
 
 关于这个配置的有趣的事情是在配置中没有任何地方我们实际上告诉`sessionDAO`实例使用`Cache`或`CacheManager`！那么如何`sessionDAO`使用分布式缓存呢？
 
-当Shiro初始化时`SecurityManager`，它将检查是否`SessionDAO`实现了[`CacheManagerAware`](http://shiro.apache.org/static/current/apidocs/org/apache/shiro/cache/CacheManagerAware.html)接口。如果是，它将自动提供任何可用的全局配置`CacheManager`。
+当Shiro初始化时`SecurityManager`，它将检查`SessionDAO` 是否实现了`CacheManagerAware`接口。如果是，它将自动提供任何可用的全局配置`CacheManager`。
+
+![1543545256800](C:\Users\Administrator\AppData\Local\Temp\1543545256800.png)
 
 因此，当Shiro评估该`securityManager.cacheManager = $cacheManager`行时，它将发现`EnterpriseCacheSessionDAO`实现`CacheManagerAware`接口并`setCacheManager`使用您配置`CacheManager`的方法参数调用该方法。
 
-然后在运行时，当`EnterpriseCacheSessionDAO`需要`activeSessionsCache`它时，它会要求`CacheManager`实例返回它，使用`activeSessionsCacheName`查找键来获取`Cache`实例。该`Cache`实例（由您的分布式/企业缓存产品的API支持）将用于存储和检索所有`SessionDAO`CRUD操作的会话。
+然后在运行时，当`EnterpriseCacheSessionDAO`需要`activeSessionsCache`它时，它会要求`CacheManager`实例返回它，使用`activeSessionsCacheName`查找键来获取`Cache`实例。该`Cache`实例（由您的分布式/企业缓存产品的API支持）将用于存储和检索所有`SessionDAO`CRUD操作的session。
 
-### [Ehcache + Terracotta](http://shiro.apache.org/session-management.html#ehcache-terracotta)
+### Ehcache + Terracotta
 
-人们在使用Shiro时取得成功的一种分布式缓存解决方案是Ehcache + Terracotta配对。有关如何使用Ehcache启用分布式缓存的完整详细信息，请参阅Ehcache托管的[带有Terracotta的分布式缓存](http://www.ehcache.org/documentation/get-started/about-distributed-cache)文档。
+已经成功使用 Ehcache + Terracotta 作为分布式缓存解决方案。有关如何使用Ehcache启用分布式缓存的完整详细信息，请参阅Ehcache托管的[Distributed Caching With Terracotta](http://www.ehcache.org/documentation/get-started/about-distributed-cache) 文档。
 
 一旦你将Terracotta集群与Ehcache配合使用，Shiro特有的部件就非常简单了。阅读并遵循[Ehcache SessionDAO](http://shiro.apache.org/session-management.html#SessionManagement-ehcachesessiondao)文档，但我们需要进行一些更改
 
-[之前引用](http://shiro.apache.org/session-management.html#SessionManagement-ehcachesessioncacheconfiguration)的Ehcache会话缓存配置不起作用 - 需要特定于Terracotta的配置。以下是经过测试可正常工作的示例配置。将其内容保存在文件中并将其保存在`ehcache.xml`文件中：
+之前使用的Ehcache配置文件将不起作用 - 需要特定于Terracotta的配置。以下是经过测试可正常工作的示例配置。将其内容保存在文件中并将其保存在`ehcache.xml`文件中：
 
-**TerraCotta会话聚类**
+**TerraCotta session集群**
 
-```
+```xml
 <ehcache>
     <terracottaConfig url="localhost:9510"/>
     <diskStore path="java.io.tmpdir/shiro-ehcache"/>
@@ -463,20 +465,21 @@ securityManager.cacheManager = $cacheManager
 </ehcache>
 ```
 
-当然，您需要更改`<terracottaConfig url="localhost:9510"/>`条目以引用Terracotta服务器阵列的相应主机/端口。另请注意，与[以前的](http://shiro.apache.org/session-management.html#SessionManagement-ehcachesessioncacheconfiguration)配置不同，`ehcache-activeSessionCache`元素**不**设置`diskPersistent`或`overflowToDisk`属性`true`。它们应该都是`false`在群集配置中不支持的真值。
+当然，您需要更改`<terracottaConfig url="localhost:9510"/>` 配置以指向Terracotta服务器的相应主机/端口。另请注意，与[以前的](http://shiro.apache.org/session-management.html#SessionManagement-ehcachesessioncacheconfiguration)配置不同，`ehcache-activeSessionCache`元素不在设置`diskPersistent`或`overflowToDisk` 为属性`true`。它们应该都是`false`。
 
-保存此`ehcache.xml`文件后，我们需要在Shiro的配置中引用它。假设您已经`ehcache.xml`在类路径的根目录中访问了特定于兵马俑的文件，这里是最终的Shiro配置，它可以为所有Shiro的需求（包括Sessions）启用Terracotta + Ehcache群集：
+保存此`ehcache.xml`文件后，我们需要在Shiro的配置中引用它。如果您已经在项目根路径配置了特定于terracotta 的ehcache.xml文件，如下是开启Terracotta + Ehcache群集的Shiro配置：
 
-**shiro.ini用于Ehcache和Terracotta的会话聚类**
+**用于Ehcache和Terracotta的session集群的shiro.ini**
 
-```
+```ini
 sessionDAO = org.apache.shiro.session.mgt.eis.EnterpriseCacheSessionDAO
-# This name matches a cache name in ehcache.xml:
+# 匹配cache.xml中配置cache标签的name属性:
 sessionDAO.activeSessionsCacheName = shiro-activeSessionsCache
 securityManager.sessionManager.sessionDAO = $sessionDAO
 
-# Configure The EhCacheManager:
+# 配置EhCacheManager作为cacheManager:
 cacheManager = org.apache.shiro.cache.ehcache.EhCacheManager
+# 配置ehcache.xml路径
 cacheManager.cacheManagerConfigFile = classpath:ehcache.xml
 
 # Configure the above CacheManager on Shiro's SecurityManager
@@ -484,21 +487,21 @@ cacheManager.cacheManagerConfigFile = classpath:ehcache.xml
 securityManager.cacheManager = $cacheManager
 ```
 
-请记住，**订购事项**。通过配置`cacheManager`上的`securityManager`最后，我们保证的CacheManager可以传播到所有先前配置的`CacheManagerAware`组件（如`EnterpriseCachingSessionDAO`）。
+请注意配置的顺序。通过最后配置`securityManager`上的`cacheManager`，我们可以确保的CacheManager可以传播到所有先前配置的`CacheManagerAware`组件（如`EnterpriseCachingSessionDAO`）。
 
-### [动物园管理员](http://shiro.apache.org/session-management.html#zookeeper)
+### Zookeeper
 
-用户已经报告使用[Apache Zookeeper](http://zookeeper.apache.org/)来管理/协调分布式会话。如果您有任何关于这将如何工作的文档/评论，请将它们发布到Shiro [邮件列表](http://shiro.apache.org/mailing-lists.html)
+您可以使用Apache Zookeeper管理/调度分布式缓存
 
-## [会话和主题国家](http://shiro.apache.org/session-management.html#sessions-and-subject-state)
+## Session和主体状态
 
-### 有状态申请（允许会议）
+### 有状态申请（session支持的）
 
-默认情况下，Shiro的SecurityManager实现将使用Subject的Session作为策略来存储Subject的identity（`PrincipalCollection`）和身份验证状态（`subject.isAuthenticated()`）以供继续引用。这通常发生在主题登录或通过RememberMe服务发现主题的身份之后。
+默认情况下，SecurityManager使用session存错主体的身份信息(`PrincipalCollection `) 和认证状态(`subject.isAuthenticated()` ),  这通常发生在主体登录或通过RememberMe服务发现主体身份之后.
 
-这种默认方法有一些好处：
+这种做好有一些好处：
 
-- 服务请求，调用或消息的任何应用程序都可以将会话ID与请求/调用/消息有效负载相关联，这是Shiro将用户与入站请求相关联所需的全部内容。例如，如果使用`Subject.Builder`，则只需获取相关主题即可：
+- 服务请求，调用或消息的任何应用程序都可以将会话ID与请求/调用/消息有效负载相关联，这是Shiro将用户与入站请求相关联所需的全部内容。例如，如果使用`Subject.Builder`，则只需获取相关主体即可：
 
   ```java
   Serializable sessionId = //get from the inbound request or remote method invocation payload Subject requestSubject = new Subject.Builder().sessionId(sessionId).buildSubject();
@@ -514,9 +517,9 @@ securityManager.cacheManager = $cacheManager
 
 这几乎总是通过验证应用程序处理的每个请求/调用/消息来实现。例如，大多数无状态Web应用程序通常通过强制执行HTTP Basic身份验证来支持此操作，允许浏览器代表最终用户对每个请求进行身份验证。远程处理或消息传递框架必须确保将主体主体和凭证附加到每个调用或消息有效负载，通常由框架代码执行。
 
-#### [禁用主题状态会话存储](http://shiro.apache.org/session-management.html#disabling-subject-state-session-storage)
+#### 禁用主体状态存储到session
 
-从Shiro 1.2及更高版本开始，希望禁用Shiro的持久主题状态到会话的内部实现策略的应用程序可以通过执行以下操作在*所有*主题中完全禁用它：
+从Shiro 1.2及更高版本开始，希望禁用Shiro的持久主体状态到session的内部实现策略的应用程序可以通过执行以下操作在*所有主体*中完全禁用它：
 
 在`shiro.ini`，配置以下属性`securityManager`：
 
@@ -529,29 +532,27 @@ securityManager.subjectDAO.sessionStorageEvaluator.sessionStorageEnabled = false
 ...
 ```
 
-这将防止从四郎使用对象的会话存储跨请求/调用/邮件是主题的国家*所有科目*。请确保您对每个请求进行身份验证，以便Shiro知道主题对于任何给定的请求/调用/消息是谁。
+这将防止从shiro通过请求/调用/消息队列存储主体状态到session。请确保您对每个请求进行身份验证。
 
  
 
-Shiro的需求与您的需求相比
+> **Shiro's Needs vs. Your Needs** 
+>
+> 这将禁止Shiro使用session作为存储策略。它**不会**完全禁用Sessions。如果您自己的代码显式调用`subject.getSession()`或`subject.getSession(true)`仍然会创建会话。
 
-------
+### 混合方法
 
-这将禁止Shiro自己的实现使用Sessions作为存储策略。它**不会**完全禁用Sessions。如果您自己的代码显式调用`subject.getSession()`或仍然会创建会话`subject.getSession(true)`。
+上面的`shiro.ini`配置行（`securityManager.subjectDAO.sessionStorageEvaluator.sessionStorageEnabled = false`）将禁止Shiro使用Session作为*所有*Subject 的存储策略。
 
-### [混合方法](http://shiro.apache.org/session-management.html#a-hybrid-approach)
+但是，如果你想要一种混合方法呢？可以使得一些subject使用session而另一些不适用.  这种混合方法对许多应用都是有益的。例如：
 
-上面的`shiro.ini`配置行（`securityManager.subjectDAO.sessionStorageEvaluator.sessionStorageEnabled = false`）将禁止Shiro使用Session作为*所有*Subject 的实现策略。
-
-但是，如果你想要一种混合方法呢？如果某些主题应该有会话而其他人不应该怎么办？这种混合方法对许多应用都是有益的。例如：
-
-- 也许人类主体（例如网络浏览器用户）应该能够使用Sessions获得上面提供的好处。
-- 也许非人物主体（如API客户或第三方应用程序）应该*不*创建会话，因为他们与软件的交互可能是间歇性的和/或不稳定。
-- 也许某个类型的所有主题或从某个位置访问系统的主体应该在会话中保持状态，但所有其他主管不应该。
+- 人类主体（例如网络浏览器用户）应该能够使用Sessions。
+- 也许非人物主体（如API客户或第三方应用程序）应该*不*创建会话，因为他们与软件的交互可能是间歇性的/或不稳定。
+- 也许某个类型的所有主体或从某个位置访问系统的主体应该在会话中保存持久状态，但所有其他主体不应该。
 
 如果您需要这种混合方法，您可以实现一个`SessionStorageEvaluator`。
 
-#### [SessionStorageEvaluator](http://shiro.apache.org/session-management.html#sessionstorageevaluator)
+#### SessionStorageEvaluator
 
 如果您想要确切地控制哪些主题的状态在其会话中保持不变，您可以实现该`org.apache.shiro.mgt.SessionStorageEvaluator`接口并告诉Shiro确切哪些主题应该支持会话存储。
 
@@ -559,7 +560,7 @@ Shiro的需求与您的需求相比
 
 **SessionStorageEvaluator**
 
-```
+```java
 public interface SessionStorageEvaluator {
 
     public boolean isSessionStorageEnabled(Subject subject);
@@ -571,13 +572,13 @@ public interface SessionStorageEvaluator {
 
 您可以实现此接口并检查主题以获取您做出此决定可能需要的任何信息。
 
-##### [主题检查](http://shiro.apache.org/session-management.html#subject-inspection)
+##### 检查主体
 
 在实现`isSessionStorageEnabled(subject)`界面方法时，您始终可以查看`Subject`并获取您做出决定所需的任何内容。当然，所有预期的Subject方法都可以使用（`getPrincipals()`等），但环境特定的`Subject`实例也很有价值。
 
 例如，在Web应用程序中，如果必须根据当前数据做出决策，则`ServletRequest`可以获取请求或响应，因为运行时`Subject`实例实际上是一个[`WebSubject`](http://shiro.apache.org/static/current/apidocs/org/apache/shiro/web/subject/WebSubject.html)实例：
 
-```
+```java
 ...
     public boolean isSessionStorageEnabled(Subject subject) {
         boolean enabled = false;
@@ -593,15 +594,15 @@ public interface SessionStorageEvaluator {
     }
 ```
 
-**NB** Framework开发人员应牢记这种类型的访问，并确保通过特定于环境的`Subject`实现提供任何请求/调用/消息上下文对象。如果您想要为您的框架/环境设置一些帮助，请联系Shiro用户邮件列表。
+**N.B.** Framework开发人员应牢记这种类型的访问，并确保通过特定于环境的`Subject`实现提供任何请求/调用/消息上下文对象。如果您想要为您的框架/环境设置一些帮助，请联系Shiro用户邮件列表。
 
-#### [组态](http://shiro.apache.org/session-management.html#configuration)
+#### 配置
 
-实现`SessionStorageEvaluator`界面后，可以在`shiro.ini`以下位置进行配置：
+实现`SessionStorageEvaluator `接口后，可以在`shiro.ini`以下位置进行配置：
 
 **shiro.ini SessionStorageEvaluator配置**
 
-```
+```ini
 [main]
 ...
 sessionStorageEvaluator = com.mycompany.shiro.subject.mgt.MySessionStorageEvaluator
@@ -610,23 +611,23 @@ securityManager.subjectDAO.sessionStorageEvaluator = $sessionStorageEvaluator
 ...
 ```
 
-### [Web应用程序](http://shiro.apache.org/session-management.html#web-applications)
+### Web应用
 
-Web应用程序通常希望在每个请求的基础上简单地启用或禁用会话创建，而不管哪个Subject正在执行请求。这通常用于支持REST和Messaging / RMI体系结构。例如，可能允许正常的最终用户（使用浏览器的人）创建和使用会话，但远程API客户端使用REST或SOAP，并且根本不应该有会话（因为它们在每个请求上进行身份验证，这在REST / SOAP架构）。
+Web应用程序通常希望在每个请求的基础上简单地启用或禁用session创建，而不管哪个Subject正在执行请求。这通常用于支持REST和Messaging / RMI体系结构。例如，可能允许正常的用户（使用浏览器的人）创建和使用会话，使用使用REST和SAOP的远程API客户端根本不应该有session。
 
-为了支持这种混合/按请求功能，`noSessionCreation`Shiro为Web应用程序启用了默认过滤器的“池”中添加了一个过滤器。此过滤器将阻止在请求期间创建新会话以保证无状态体验。在`shiro.ini` `[urls]`部分中，您通常会在所有其他过滤器之前定义此过滤器，以确保永远不会使用会话。
+为了支持这种混合/按请求功能，Shiro默认为Web应用程序为filter池中添加了一个`noSessionCreation` filter。此过滤器将阻止在请求期间创建新session以保证无状态体验。在`shiro.ini` `[urls]`部分中，您通常会在所有其他过滤器之前定义此过滤器，以确保永远不会使用会话。
 
 例如：
 
-**shiro.ini - 根据请求禁用会话创建**
+**shiro.ini - 根据请求禁用session创建**
 
-```
+```ini
 [urls]
 ...
 /rest/** = noSessionCreation, authcBasic, ...
 ```
 
-此筛选器允许任何*现有*会话使用会话，但不允许在筛选的请求期间创建新会话。也就是说*，对于尚未具有现有会话*的请求或主题的以下四个方法调用中的任何*一个*将自动触发`DisabledSessionException`：
+此filter允许使用现有的session，但不允许在filter的请求期间创建新session。也就是说，当调用以下四个方法会自动抛出`DisabledSessionException` 异常:
 
 - `httpServletRequest.getSession()`
 - `httpServletRequest.getSession(true)`
@@ -635,7 +636,7 @@ Web应用程序通常希望在每个请求的基础上简单地启用或禁用�
 
 如果`Subject`在访问noSessionCreation-protected-URL之前已有会话，则上述4个调用仍将按预期工作。
 
-最后，在所有情况下始终允许以下调用：
+最后，以下方法在所有情况下都可以调用,  并且不跑出异常：
 
 - `httpServletRequest.getSession(false)`
 - `subject.getSession(false)`
