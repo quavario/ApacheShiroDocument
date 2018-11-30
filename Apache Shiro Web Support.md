@@ -1,6 +1,51 @@
 # Apache Shiro Web Support
 
-[TOC]
+- [配置](#配置)
+  - [`web.xml`](http://shiro.apache.org/web.html#Web-%7B%7Bweb.xml%7D%7D)
+    - [Shiro 1.2及以后](http://shiro.apache.org/web.html#Web-Shiro1.2andlater)
+      - [自定义`WebEnvironment`类](http://shiro.apache.org/web.html#Web-Custom%7B%7BWebEnvironment%7D%7DClass)
+      - [自定义配置位置](http://shiro.apache.org/web.html#Web-CustomConfigurationLocations)
+    - [Shiro 1.1及更早版本](http://shiro.apache.org/web.html#Web-Shiro1.1andearlier)
+      - [自定义路径](http://shiro.apache.org/web.html#Web-CustomPath)
+      - [内联配置](http://shiro.apache.org/web.html#Web-InlineConfig)
+  - [Web INI配置](http://shiro.apache.org/web.html#Web-WebINIconfiguration)
+    - [`[urls\]`](http://shiro.apache.org/web.html#Web-%7B%7B%5Curls%5C%7D%7D)
+      - [URL路径表达式](http://shiro.apache.org/web.html#Web-URLPathExpressions)
+      - 过滤链定义
+        - [可用过滤器](http://shiro.apache.org/web.html#Web-AvailableFilters)
+- [默认过滤器](http://shiro.apache.org/web.html#Web-DefaultFilters)
+- 启用和禁用过滤器
+  - [常规启用/禁用](http://shiro.apache.org/web.html#Web-GeneralEnabling%2FDisabling)
+  - [特定于请求的启用/禁用](http://shiro.apache.org/web.html#Web-RequestspecificEnabling%2FDisabling)
+  - [特定于路径的启用/禁用](http://shiro.apache.org/web.html#Web-PathspecificEnabling%2FDisabling)
+- [会话管理](http://shiro.apache.org/web.html#Web-SessionManagement)
+  - [Servlet容器会话](http://shiro.apache.org/web.html#Web-ServletContainerSessions)
+    - [Servlet容器会话超时](http://shiro.apache.org/web.html#Web-ServletContainerSessionTimeout)
+  - [原生会话](http://shiro.apache.org/web.html#Web-NativeSessions)
+    - [`DefaultWebSessionManager`](http://shiro.apache.org/web.html#Web-%7B%7BDefaultWebSessionManager%7D%7D)
+      - [本机会话超时](http://shiro.apache.org/web.html#Web-NativeSessionTimeout)
+      - 会话Cookie
+        - [会话Cookie配置](http://shiro.apache.org/web.html#Web-SessionCookieConfiguration)
+        - [禁用会话Cookie](http://shiro.apache.org/web.html#Web-DisablingtheSessionCookie)
+- [记住我的服务](http://shiro.apache.org/web.html#Web-RememberMeServices)
+  - [计划支持](http://shiro.apache.org/web.html#Web-ProgrammaticSupport)
+  - [基于表单的登录](http://shiro.apache.org/web.html#Web-FormbasedLogin)
+  - [Cookie配置](http://shiro.apache.org/web.html#Web-Cookieconfiguration)
+  - [习惯 `RememberMeManager`](http://shiro.apache.org/web.html#Web-Custom%7B%7BRememberMeManager%7D%7D)
+- [JSP / GSP标记库](http://shiro.apache.org/web.html#Web-JSP%2FGSPTagLibrary)
+  - [标记库配置](http://shiro.apache.org/web.html#Web-TagLibraryConfiguration)
+  - [该`guest`标签](http://shiro.apache.org/web.html#Web-The%7B%7Bguest%7D%7Dtag)
+  - [该`user`标签](http://shiro.apache.org/web.html#Web-The%7B%7Buser%7D%7Dtag)
+  - [该`authenticated`标签](http://shiro.apache.org/web.html#Web-The%7B%7Bauthenticated%7D%7Dtag)
+  - [该`notAuthenticated`标签](http://shiro.apache.org/web.html#Web-The%7B%7BnotAuthenticated%7D%7Dtag)
+  - 该`principal`标签
+    - [键入的主体](http://shiro.apache.org/web.html#Web-Typedprincipal)
+    - [主要财产](http://shiro.apache.org/web.html#Web-Principalproperty)
+  - [该`hasRole`标签](http://shiro.apache.org/web.html#Web-The%7B%7BhasRole%7D%7Dtag)
+  - [该`lacksRole`标签](http://shiro.apache.org/web.html#Web-The%7B%7BlacksRole%7D%7Dtag)
+  - [该`hasAnyRole`标签](http://shiro.apache.org/web.html#Web-The%7B%7BhasAnyRole%7D%7Dtag)
+  - [该`hasPermission`标签](http://shiro.apache.org/web.html#Web-The%7B%7BhasPermission%7D%7Dtag)
+  - [该`lacksPermission`标签](http://shiro.apache.org/web.html#Web-The%7B%7BlacksPermission%7D%7Dtag)
 
 ## 配置
 
