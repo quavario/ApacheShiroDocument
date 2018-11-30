@@ -1,7 +1,7 @@
 # Apache Shiro Web Support
 
 - [配置](#配置)
-  - [`web.xml`](http://shiro.apache.org/web.html#Web-%7B%7Bweb.xml%7D%7D)
+  - [`web.xml`](#web.xml)
     - [Shiro 1.2及以后](http://shiro.apache.org/web.html#Web-Shiro1.2andlater)
       - [自定义`WebEnvironment`类](http://shiro.apache.org/web.html#Web-Custom%7B%7BWebEnvironment%7D%7DClass)
       - [自定义配置位置](http://shiro.apache.org/web.html#Web-CustomConfigurationLocations)

@@ -23,13 +23,13 @@
    - [x] [加密](https://github.com/quavario/ApacheShiroDocument/blob/master/Apache%20Shiro%E5%8A%A0%E5%AF%86.md)(11月30日更新)
 3. Web应用
    - Web
-     - [ ] 配置
-     - [ ] [urls\]（基于路径的安全性）
-     - [ ] 默认过滤器
-     - [ ] 会话管理
-     - [ ] JSP标签库
+     - [x] 配置
+     - [x] [urls\]（基于路径的安全性）
+     - [x] 默认过滤器
+     - [x] 会话管理
+     - [x] JSP标签库
 4. 辅助支持
-   - [ ] 缓存
+   - [x] 缓存
    - [ ] 并发和多线程
    - [ ] 测试
    - [ ] 自定义Subject
