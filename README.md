@@ -10,35 +10,35 @@
 翻译自官网[Docs](http://shiro.apache.org/reference.html)
 
 1. 概览
-   - [x] [介绍](https://github.com/quavario/ApacheShiroDocument/blob/master/Ashroid%20Shiro%E7%AE%80%E4%BB%8B.md)
-   - [x] [入门教程](https://github.com/quavario/ApacheShiroDocument/blob/master/Apache%20Shiro%20%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B.md)
-   - [x] [架构](https://github.com/quavario/ApacheShiroDocument/blob/master/Apache%20Shiro%E6%9E%B6%E6%9E%84.md)
-   - [x] [配置](https://github.com/quavario/ApacheShiroDocument/blob/master/Apache%20Shiro%E9%85%8D%E7%BD%AE.md)
+   - [x] [介绍](https://github.com/quavario/ApacheShiroDocument/blob/master/1.Overview/1.Introduction.md)
+   - [x] [入门教程](https://github.com/quavario/ApacheShiroDocument/blob/master/1.Overview/2.Tutorial.md)
+   - [x] [架构](https://github.com/quavario/ApacheShiroDocument/blob/master/1.Overview/3.Architecture.md)
+   - [x] [配置](https://github.com/quavario/ApacheShiroDocument/blob/master/1.Overview/4.Configuration.md)
 2. 核心
-   - [x] [认证](https://github.com/quavario/ApacheShiroDocument/blob/master/Apache%20Shiro%E8%BA%AB%E4%BB%BD%E9%AA%8C%E8%AF%81.md)
-   - [x] [授权](https://github.com/quavario/ApacheShiroDocument/blob/master/Apache%20Shiro%E6%8E%88%E6%9D%83.md)
-     - [x] [权限](https://github.com/quavario/ApacheShiroDocument/blob/master/Apache%20Shiro%E7%9A%84%E6%9D%83%E9%99%90%E6%8E%A7%E5%88%B6.md)
-   - [x] [Realms](https://github.com/quavario/ApacheShiroDocument/blob/master/Apache%20Shiro%20Realm.md)
-   - [x] [会话管理](https://github.com/quavario/ApacheShiroDocument/blob/master/Apache%20Shiro%E4%BC%9A%E8%AF%9D%E7%AE%A1%E7%90%86.md) (11月30日更新)
-   - [x] [加密](https://github.com/quavario/ApacheShiroDocument/blob/master/Apache%20Shiro%E5%8A%A0%E5%AF%86.md)(11月30日更新)
+   - [x] [认证](https://github.com/quavario/ApacheShiroDocument/blob/master/2.Core/1.Authentication.md)
+   - [x] [授权](https://github.com/quavario/ApacheShiroDocument/blob/master/2.Core/2.1Authorization.md)
+     - [x] [权限](https://github.com/quavario/ApacheShiroDocument/blob/master/2.Core/2.2.Permissions.md)
+   - [x] [Realms](https://github.com/quavario/ApacheShiroDocument/blob/master/2.Core/3.Realms.md)
+   - [x] [会话管理](https://github.com/quavario/ApacheShiroDocument/blob/master/2.Core/4.Session%20Management.md) (11月30日更新)
+   - [x] [加密](https://github.com/quavario/ApacheShiroDocument/blob/master/2.Core/5.Cryptography.md)(11月30日更新)
 3. Web应用
-   - Web
+   - [Web](https://github.com/quavario/ApacheShiroDocument/blob/master/3.Web%20Applications/Web.md)
      - [x] 配置
      - [x] [urls\]（基于路径的安全性）
      - [x] 默认过滤器
      - [x] 会话管理
      - [x] JSP标签库
 4. 辅助支持
-   - [x] 缓存
-   - [ ] 并发和多线程
-   - [ ] 测试
-   - [ ] 自定义Subject
-5. 于其他框架整合
-   - [ ] Spring框架
-   - [ ] Guice
-   - [ ] CAS
+   - [x] [缓存](https://github.com/quavario/ApacheShiroDocument/blob/master/4.Auxiliary%20Support/1.Caching.md)
+   - [x] [并发和多线程](https://github.com/quavario/ApacheShiroDocument/blob/master/4.Auxiliary%20Support/2.Concurrency%20%26%20Multithreading.md)
+   - [x] [测试](https://github.com/quavario/ApacheShiroDocument/blob/master/4.Auxiliary%20Support/3.Testing.md)
+   - [x] [自定义Subject](https://github.com/quavario/ApacheShiroDocument/blob/master/4.Auxiliary%20Support/4.Custom%20Subjects.md)
+5. 整合
+   - [x] [Spring](https://github.com/quavario/ApacheShiroDocument/blob/master/5.Integration/1.Spring%20Framework.md)
+   - [x] [Guice](https://github.com/quavario/ApacheShiroDocument/blob/master/5.Integration/2.Guice.md)
+   - [x] [CAS](https://github.com/quavario/ApacheShiroDocument/blob/master/5.Integration/3.CAS.md)
 6. 工具
-   - [ ] Commoand Lind Hasher
+   - [x] [Commoand Lind Hasher](https://github.com/quavario/ApacheShiroDocument/blob/master/6.Tools/Command%20Line%20Hasher.md)
 7. 索引
-   - [ ] 术语
+   - [x] [术语](https://github.com/quavario/ApacheShiroDocument/blob/master/7.Index/Terminology.md)
 
