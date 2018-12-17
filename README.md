@@ -29,7 +29,7 @@
      - [x] 会话管理
      - [x] JSP标签库
 4. 辅助支持
-   - [x] [缓存](https://github.com/quavario/ApacheShiroDocument/blob/master/4.Auxiliary%20Support/1.Caching.md)
+   - [x] [缓存](https://github.com/quavario/ApacheShiroDocument/blob/master/4.Auxiliary%20Support/1.Caching.md) (12月17日更新)
    - [x] [并发和多线程](https://github.com/quavario/ApacheShiroDocument/blob/master/4.Auxiliary%20Support/2.Concurrency%20%26%20Multithreading.md)
    - [x] [测试](https://github.com/quavario/ApacheShiroDocument/blob/master/4.Auxiliary%20Support/3.Testing.md)
    - [x] [自定义Subject](https://github.com/quavario/ApacheShiroDocument/blob/master/4.Auxiliary%20Support/4.Custom%20Subjects.md)
