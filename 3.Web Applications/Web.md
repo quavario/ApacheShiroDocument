@@ -1,6 +1,6 @@
 # Apache Shiro Web Support
 
-- [配置](#配置)
+- [配置#配置](/account/** = ssl, authc/account/signup = anon)
   - [`web.xml`](#web.xml)
     - [Shiro 1.2及以后](http://shiro.apache.org/web.html#Web-Shiro1.2andlater)
       - [自定义`WebEnvironment`类](http://shiro.apache.org/web.html#Web-Custom%7B%7BWebEnvironment%7D%7DClass)
@@ -49,23 +49,21 @@
 
 ## 配置
 
-将Shiro集成到任何Web应用程序的最简单方法是在web.xml中配置Servlet ContextListener和Filter，它们了解如何读取Shiro的INI配置。大部分INI配置格式本身在配置页面的[INI章节](http://shiro.apache.org/configuration.html#Configuration-INISections)部分中定义，但我们将在此处介绍一些其他特定于Web的部分。
+将Shiro集成到Web应用程序最简单方法是在web.xml中配置Servlet ContextListener和Filter，它们知道如何读取Shiro的INI配置文件。大部分INI配置方式在[INI章节](http://shiro.apache.org/configuration.html#Configuration-INISections)部分中定义，但我们将在此处介绍一些其他特定于Web的部分。
 
  
 
-用Spring？
-
-------
-
-Spring Framework用户不会执行此设置。如果您使用Spring，则需要阅读有关[特定](http://shiro.apache.org/spring.html#[[#]]#Spring-WebApplications)于[Spring的Web配置](http://shiro.apache.org/spring.html#[[#]]#Spring-WebApplications)。
+> **与Spring继承**
+>
+> Spring Framework用户不会使用本章节介绍的方式。如果您使用Spring，阅读有关[特定](http://shiro.apache.org/spring.html#[[#]]#Spring-WebApplications)于[Spring的Web配置](http://shiro.apache.org/spring.html#[[#]]#Spring-WebApplications)。
 
 ### [web.xml中](http://shiro.apache.org/web.html#web-xml)
 
 #### Shiro 1.2及以后
 
-在Shiro 1.2及更高版本中，标准Web应用程序通过将以下XML块添加到以下内容来初始化Shiro `web.xml`：
+在Shiro 1.2及更高版本中，配置以下代码到`web.xml` 中来初始化shiro：
 
-```
+```xml
 <listener>
     <listener-class>org.apache.shiro.web.env.EnvironmentLoaderListener</listener-class>
 </listener>
@@ -87,59 +85,61 @@ Spring Framework用户不会执行此设置。如果您使用Spring，则需要�
 </filter-mapping>
 ```
 
-这假定Shiro INI [配置](http://shiro.apache.org/configuration.html)文件位于以下两个位置之一，使用先找到的位置：
+想要配置生效,  需要在以下两个路径之一配置`shiro.ini`：
 
 1. `/WEB-INF/shiro.ini`
+
 2. `shiro.ini` 文件位于类路径的根目录。
 
-以下是上面的配置：
+   `web.xml`配置详解：
 
-- 在`EnvironmentLoaderListener`初始化四郎`WebEnvironment`实例（包含一切四郎需要操作，其中包括`SecurityManager`），并使其在可接入`ServletContext`。如果您需要随时获取此`WebEnvironment`实例，可以致电`WebUtils.getRequiredWebEnvironment(servletContext)`。
-- 在`ShiroFilter`将使用这个`WebEnvironment`来执行所有必要的安全操作的任何过滤的要求。
-- 最后，该`filter-mapping`定义确保所有请求都被过滤`ShiroFilter`，建议大多数Web应用程序使用，以确保可以保护任何请求。
+- 在`EnvironmentLoaderListener` 初始化 一个 `WebEnvironment`实例（包含所有shiro需要的操作，也包括`SecurityManager`），并使其在可接入`ServletContext`。可以调用`WebUtils.getRequiredWebEnvironment(servletContext)` 方法获取`WebEnvironment` 对象。
+- 在`ShiroFilter`将使用这个`WebEnvironment ` 执行需要的安全操作。
+- 最后，`filter-mapping`定义确保所有请求都会经过`ShiroFilter`，建议大多数Web应用程序使用此配置。
 
- 
 
-ShiroFilter过滤器映射
-
-------
-
-通常需要在任何其他“filter-mapping”声明之前定义`ShiroFilter filter-mapping`，以确保Shiro也可以在这些过滤器中运行。
+> **filter-mapping 配置位置**
+>
+> 建议在配置其他filter之前配置shiro过滤器,  这样可以确保所有请求都会经过shiro过滤
 
 ##### 自定义`WebEnvironment`类
 
-默认情况下，`EnvironmentLoaderListener`将创建一个`IniWebEnvironment`实例，该实例假设Shiro的基于INI的[配置](http://shiro.apache.org/configuration.html)。如果您愿意，可以`WebEnvironment`通过指定`ServletContext` `context-param`in 来指定自定义实例`web.xml`：
+默认情况下，`EnvironmentLoaderListener`将创建一个`IniWebEnvironment`实例，该实例默认使用ini配置方式。如果您愿意，你可以在`web.xml` 中ServletContext的context-param,  如下：
 
-```
+```xml
 <context-param>
     <param-name>shiroEnvironmentClass</param-name>
     <param-value>com.foo.bar.shiro.MyWebEnvironment</param-value>
 </context-param>
 ```
 
-这允许您自定义如何解析配置格式并将其表示为`WebEnvironment`实例。您可以为现有`IniWebEnvironment`的自定义行为创建子类，或者完全支持不同的配置格式。例如，如果有人想用XML而不是INI配置Shiro，他们可以创建一个基于XML的实现，例如`com.foo.bar.shiro.XmlWebEnvironment`。
+你可以自定义一个`WebEnvironment` 子类来自定义配置文件的格式(如ini或者xml)。你可以创建`IniWebEnvironment` 子类，或者完全支持不同的配置格式。例如，如果有人想用XML而不是INI配置Shiro，他们可以创建一个基于XML的实现，例如`com.foo.bar.shiro.XmlWebEnvironment`。
 
 ##### [自定义配置位置](http://shiro.apache.org/web.html#custom-configuration-locations)
 
-本`IniWebEnvironment`类希望读取并加载INI配置文件。默认情况下，此类将自动查看Shiro `.ini`配置的以下两个位置（按顺序）：
+`IniWebEnvironment ` 通过  `convertPathToIni` 方法将shiro.ini 转换成ini对象 。默认情况下，会自动加载以下位置的shiro.ini（按顺序）：
 
 1. `/WEB-INF/shiro.ini`
 2. `classpath:shiro.ini`
 
-它将使用先找到的任何一个。
+**通过convertPathToIni将路径转换成ini对象**
+
+![54444738677](..\image\1544447386774.png)
+
+他会使用最先找的一个。
 
 但是，如果你想将你的配置在其他位置，你可以与另一个指定的位置`context-param`在`web.xml`：
 
-```
+```xml
 <context-param>
     <param-name>shiroConfigLocations</param-name>
     <param-value>YOUR_RESOURCE_LOCATION_HERE</param-value>
 </context-param>
 ```
 
-默认情况下，`param-value`预期可以通过`ServletContext.`[`getResource`](http://docs.oracle.com/javaee/6/api/javax/servlet/ServletContext.html#getResource-java.lang.String-)方法定义的规则进行解析。例如，`/WEB-INF/some/path/shiro.ini`
+默认情况下，`param-value` 会被 `ServletContext.getResource`方法进行解析。这里我们可以定义param-value为shiro.ini 路径 `/WEB-INF/some/path/shiro.ini` . 
 
-但您也可以使用Shiro的[ResourceUtils类](http://shiro.apache.org/static/current/apidocs/org/apache/shiro/io/ResourceUtils.html)支持的适当资源前缀来指定特定的文件系统，类路径或URL位置，例如：
+你也可以下面三种格式设置param-value的值，例如：
 
 - `file:/home/foobar/myapp/shiro.ini`
 - `classpath:com/foo/bar/shiro.ini`
@@ -149,7 +149,7 @@ ShiroFilter过滤器映射
 
 在1.1或更早版本的Web应用程序中启用Shiro的最简单方法是定义IniShiroFilter并指定`filter-mapping`：
 
-```
+```xml
 <filter>
     <filter-name>ShiroFilter</filter-name>
     <filter-class>org.apache.shiro.web.servlet.IniShiroFilter</filter-class>
@@ -172,16 +172,18 @@ ShiroFilter过滤器映射
 
 此定义要求您的INI配置位于类路径根目录下的shiro.ini文件中（例如`classpath:shiro.ini`）。
 
-##### [自定义路径](http://shiro.apache.org/web.html#custom-path)
+##### 自定义路径
 
-如果你不想把你的INI配置中`/WEB-INF/shiro.ini`或者`classpath:shiro.ini`，你可以自定义资源的位置根据需要指定。添加`configPath init-param`并指定资源位置：
+如果你不想在`/WEB-INF/shiro.ini`或者`classpath:shiro.ini` 配置，你可以指定一个路径,  并将该路径配置为 `init-param`  下name为`configPath` 的值  示例配置：
 
-```
+```xml
 <filter>
     <filter-name>ShiroFilter</filter-name>
     <filter-class>org.apache.shiro.web.servlet.IniShiroFilter</filter-class>
     <init-param>
+        <!-- param-name必须为configPath -->
         <param-name>configPath</param-name>
+        <!--此处配置ini的路径-->
         <param-value>/WEB-INF/anotherFile.ini</param-value>
     </init-param>
 </filter>
@@ -189,20 +191,15 @@ ShiroFilter过滤器映射
 ...
 ```
 
-`configPath`假定不合格（无方案或'非前缀'）值是`ServletContext`资源路径，可通过该
-`ServletContext.`[`getResource`](http://docs.oracle.com/javaee/6/api/javax/servlet/ServletContext.html#getResource-java.lang.String-)方法定义的规则进行解析。
+没有配置前缀的的configPath的值, 会通过ServletContext.getResource方法解析
 
- 
+> **ServletContext资源路径** - Shiro1.2版本之后
+>
+> 在Shiro1.2版本之后可以不写资源前缀(就是classpath: 和url:等)。在1.1和更早的版本中，所有`configPath`定义必须指定`classpath:`，`file:`或`url:`前缀。
 
-ServletContext资源路径 - Shiro 1.2+
+你也可以指定其他非`ServletContext` 资源路径,  通过使用`classpath:`，`url:`或`file:`前缀分别表示classpath中，URL或文件系统位置。例如：
 
-------
-
-Shiro 1.2及更高版本中提供了ServletContext资源路径。在1.1和更早的版本中，所有`configPath`定义必须指定`classpath:`，`file:`或`url:`前缀。
-
-你也可以指定其他非`ServletContext`通过使用资源位置`classpath:`，`url:`或`file:`前缀分别表示classpath中，URL或文件系统位置。例如：
-
-```
+```xml
 ...
 <init-param>
     <param-name>configPath</param-name>
@@ -211,58 +208,57 @@ Shiro 1.2及更高版本中提供了ServletContext资源路径。在1.1和更早
 ...
 ```
 
-##### [内联配置](http://shiro.apache.org/web.html#inline-config)
+##### 内联配置
 
 最后，还可以在不使用INI文件的情况下将您的INI配置嵌入到web.xml中。您可以使用`config init-param`而不是`configPath`：
 
-```
+```xml
 <filter>
     <filter-name>ShiroFilter</filter-name>
     <filter-class>org.apache.shiro.web.servlet.IniShiroFilter</filter-class>
-    <init-param><param-name>config</param-name><param-value>
-
-    # INI Config Here
-
-    </param-value></init-param>
+    <init-param>
+        <param-name>config</param-name>
+    	<param-value>
+    	# INI Config Here
+   		</param-value>
+    </init-param>
 </filter>
 ...
 ```
 
 内联配置通常适用于小型或简单的应用程序，但通常更方便的是将其外部化到专用的shiro.ini文件中，原因如下：
 
-- 您可能会编辑很多安全配置，并且不希望将修订控件“noise”添加到web.xml文件中
-- 您可能希望将安全配置与web.xml配置的其余部分分开
-- 您的安全配置可能会变得很大，并且您希望将web.xml保持精简并且更易于阅读
-- 您有一个复杂的构建系统，可能需要在多个位置引用相同的shiro配置
+- 您可能会编辑很多安全配置，并且不希望添加到web.xml文件中
+- 您可能希望将安全配置部分与web.xml配置的其余部分分开
+- 您的配置文件可能会变得很大，并且您希望将web.xml保持精简并且更易于阅读
+- 您有一个复杂的系统，可能需要在多个位置引用相同的shiro配置
 
-这取决于您 - 使用对您的项目有意义的东西。
+这取决于您。
 
-### [Web INI配置](http://shiro.apache.org/web.html#web-ini-configuration)
+### Web INI配置
 
-除了标准`[main]`，`[users]`并`[roles]`在主已经说明部分[配置](http://shiro.apache.org/configuration.html)章节中，你还可以指定一个特定的网络`[urls]`中的部分`shiro.ini`文件：
+除了之前我们提到过的`[main]`，`[users]` 和`[roles]` 区域，你还可以在`shiro.ini` 中指定一个特定与的web应用的`[urls]`中的区域：
 
-```
+```ini
 # [main], [users] and [roles] above here
 ...
 [urls]
 ...
 ```
 
-该`[urls]`部分允许您执行我们已经看到的任何Web框架中不存在的内容：为应用程序中的任何匹配URL路径定义ad-hoc过滤器链的能力！
+`[urls]` 区域可以做一些现有框架不支持的一些事情,  例如:  我们可以定义所有URL路径所匹配的点对点过滤器链！
 
-这是*远远*比你通常如何在定义过滤链有更灵活，功能强大，简洁的`web.xml`：即使你从来没有使用过任何其他的功能，四郎提供，仅此使用，仅此一项就使值得使用。
+#### [[urls]](http://shiro.apache.org/web.html#urls-)
 
-#### [[网址\]](http://shiro.apache.org/web.html#urls-)
+该部分中每一行的格式如下：
 
-该部分中每一行的格式`urls`如下：
-
-```
+```ini
 _URL_Ant_Path_Expression_ = _Path_Specific_Filter_Chain_
 ```
 
 例如：
 
-```
+```ini
 ...
 [urls]
 
@@ -274,42 +270,36 @@ _URL_Ant_Path_Expression_ = _Path_Specific_Filter_Chain_
 /remoting/rpc/** = authc, perms["remote:invoke"]
 ```
 
-接下来我们将详细介绍这些线的含义。
+接下来我们将详细介绍这些代码的含义。
 
 等号（=）左侧的标记是相对于Web应用程序的上下文根的[Ant](http://ant.apache.org/)风格路径表达式。
 
-例如，假设您有以下`[urls]`行：
+例如，假设您有以下`[urls]`：
 
-```
+```ini
 /account/** = ssl, authc
 ```
 
-此行指出“到我的应用程序的路径的任何请求`/account`或任何的它的子路径（`/account/foo`，`/account/bar/baz`等）将触发‘SSL，authc’过滤器链”。我们将在下面介绍过滤器链。
+此行说明任何访问`/account` 或者他的子目录的请求都会被触发`ssl,authc` 过滤器链,  过滤器链我们稍后讲解
 
-请注意，所有路径表达式都与应用程序的上下文根相关。这意味着，如果您将应用程序部署到某天，比如说，`www.somehost.com/myapp`然后再将其部署到`www.anotherhost.com`（没有'myapp'子路径），则模式匹配仍然有效。所有路径都相对于[HttpServletRequest.getContextPath（）](http://docs.oracle.com/javaee/1.3/api/javax/servlet/http/HttpServletRequest.html#getContextPath--)值。
+请注意，所有路径表达式都与应用程序的上下文根相关。这意味着，如果您将应用程序部署到，`www.somehost.com/myapp`然后再将其部署到`www.anotherhost.com`（没有'myapp'子路径），则模式匹配仍然有效。所有路径都相对于[HttpServletRequest.getContextPath（）](http://docs.oracle.com/javaee/1.3/api/javax/servlet/http/HttpServletRequest.html#getContextPath--)值。
 
- 
+> **配置顺序**
+>
+> URL路径表达式按照传入请求的定义顺序和*FIRST MATCH WINS*进行评估。例如，让我们假设有以下链定义：
+>
+> ```ini
+> /account/** = ssl, authc
+> /account/signup = anon
+> ```
+>
+> 如果请求`/account/signup`路径,  那么会被`ssl,authc` 处理,  永远不会被后面的处理.
 
-订单很重要！
-
-------
-
-URL路径表达式按照传入请求的定义顺序和*FIRST MATCH WINS*进行评估。例如，让我们假设有以下链定义：
-
-```
-/account/** = ssl, authc
-/account/signup = anon
-```
-
-如果传入的请求是打算到达的`/account/signup/index.html`（所有'anon'ymous用户都可以访问），*它将永远不会被处理！*。原因是该`/account/**`模式首先匹配传入请求，并将所有剩余定义“短路”。
-
-永远记得根据*FIRST MATCH WINS*政策定义过滤器链！
-
-##### [过滤链定义](http://shiro.apache.org/web.html#filter-chain-definitions)
+##### 过滤链定义
 
 等号（=）右侧的标记是逗号分隔的过滤器列表，用于匹配该路径的请求。它必须符合以下格式：
 
-```
+```ini
 filter1[optional_config1], filter2[optional_config2], ..., filterN[optional_configN]
 ```
 
@@ -324,19 +314,17 @@ filter1[optional_config1], filter2[optional_config2], ..., filterN[optional_conf
 
  
 
-小费
-
-------
-
-能够对路径特定配置做出反应，即`[optional_configN]`过滤器令牌的一部分，是Shiro过滤器可用的独特功能。
-
-如果您想创建自己的`javax.servlet.Filter`实现，也可以这样做，请确保您的过滤器子类[org.apache.shiro.web.filter.PathMatchingFilter](http://shiro.apache.org/static/current/apidocs/org/apache/shiro/web/filter/PathMatchingFilter.html)
+> **Tip**
+>
+> 能够对路径特定配置做出反应，即`[optional_configN]`过滤器令牌的一部分，是Shiro过滤器可用的独特功能。
+>
+> 如果您想创建自己的`javax.servlet.Filter`实现,  你可以创建[org.apache.shiro.web.filter.PathMatchingFilter](http://shiro.apache.org/static/current/apidocs/org/apache/shiro/web/filter/PathMatchingFilter.html) 子类
 
 ###### [可用过滤器](http://shiro.apache.org/web.html#available-filters)
 
 可用于过滤器链定义的过滤器“池”在本`[main]`节中定义。在主要部分中分配给它们的名称是要在过滤器链定义中使用的名称。例如：
 
-```
+```ini
 [main]
 ...
 myFilter = com.company.web.some.FilterImplementation
@@ -348,11 +336,11 @@ myFilter.property1 = value1
 /some/path/** = myFilter
 ```
 
-## [默认过滤器](http://shiro.apache.org/web.html#default-filters)
+## 默认过滤器
 
-运行Web应用程序时，Shiro将创建一些有用的默认`Filter`实例，并`[main]`自动在该部分中使用它们。您可以像配置`main`任何其他bean一样配置它们，并在链定义中引用它们。例如：
+运行Web应用程序时，Shiro将创建一些有用的`Filter`实例，并 自动在`[main] ` 部分中使用它们。您可以像配置`main`任何其他bean一样配置它们，并在链定义中引用它们。例如：
 
-```
+```ini
 [main]
 ...
 # Notice how we didn't define the class for the FormAuthenticationFilter ('authc') - it is instantiated and available already:
@@ -361,34 +349,34 @@ authc.loginUrl = /login.jsp
 
 [urls]
 ...
-# make sure the end-user is authenticated.  If not, redirect to the 'authc.loginUrl' above,
-# and after successful authentication, redirect them back to the original account page they
+# 确保前端用户是通过认证的. 否则就跳转到我们上面配置的`authc.loginUrl`对应的路径
+# 通过认证过,在跳转会之前的页面
 # were trying to view:
 /account/** = authc
 ...
 ```
 
-自动可用的默认过滤器实例由[DefaultFilter枚举](http://shiro.apache.org/static/current/apidocs/org/apache/shiro/web/filter/mgt/DefaultFilter.html)定义，枚举的`name`字段是可用于配置的名称。他们是：
+默认可用的`Filter` 对象是由枚举类型的`DefaultFilter` 定义的,  枚举的name字段是可用于配置的名称 
 
 | 过滤器名称        | 类                                                           |
 | ----------------- | ------------------------------------------------------------ |
-| 不久              | [org.apache.shiro.web.filter.authc.AnonymousFilter](http://shiro.apache.org/static/current/apidocs/org/apache/shiro/web/filter/authc/AnonymousFilter.html) |
+| anon              | [org.apache.shiro.web.filter.authc.AnonymousFilter](http://shiro.apache.org/static/current/apidocs/org/apache/shiro/web/filter/authc/AnonymousFilter.html) |
 | authc             | [org.apache.shiro.web.filter.authc.FormAuthenticationFilter](http://shiro.apache.org/static/current/apidocs/org/apache/shiro/web/filter/authc/FormAuthenticationFilter.html) |
 | authcBasic        | [org.apache.shiro.web.filter.authc.BasicHttpAuthenticationFilter](http://shiro.apache.org/static/current/apidocs/org/apache/shiro/web/filter/authc/BasicHttpAuthenticationFilter.html) |
-| 登出              | [org.apache.shiro.web.filter.authc.LogoutFilter](http://shiro.apache.org/static/current/apidocs/org/apache/shiro/web/filter/authc/LogoutFilter.html) |
+| logout            | [org.apache.shiro.web.filter.authc.LogoutFilter](http://shiro.apache.org/static/current/apidocs/org/apache/shiro/web/filter/authc/LogoutFilter.html) |
 | noSessionCreation | [org.apache.shiro.web.filter.session.NoSessionCreationFilter](http://shiro.apache.org/static/current/apidocs/org/apache/shiro/web/filter/session/NoSessionCreationFilter.html) |
-| 烫发              | [org.apache.shiro.web.filter.authz.PermissionsAuthorizationFilter](http://shiro.apache.org/static/current/apidocs/org/apache/shiro/web/filter/authz/PermissionsAuthorizationFilter.html) |
-| 港口              | [org.apache.shiro.web.filter.authz.PortFilter](http://shiro.apache.org/static/current/apidocs/org/apache/shiro/web/filter/authz/PortFilter.html) |
-| 休息              | [org.apache.shiro.web.filter.authz.HttpMethodPermissionFilter](http://shiro.apache.org/static/current/apidocs/org/apache/shiro/web/filter/authz/HttpMethodPermissionFilter.html) |
-| 角色              | [org.apache.shiro.web.filter.authz.RolesAuthorizationFilter](http://shiro.apache.org/static/current/apidocs/org/apache/shiro/web/filter/authz/RolesAuthorizationFilter.html) |
-| SSL               | [org.apache.shiro.web.filter.authz.SslFilter](http://shiro.apache.org/static/current/apidocs/org/apache/shiro/web/filter/authz/SslFilter.html) |
-| 用户              | [org.apache.shiro.web.filter.authc.UserFilter](http://shiro.apache.org/static/current/apidocs/org/apache/shiro/web/filter/authc/UserFilter.html) |
+| perms             | [org.apache.shiro.web.filter.authz.PermissionsAuthorizationFilter](http://shiro.apache.org/static/current/apidocs/org/apache/shiro/web/filter/authz/PermissionsAuthorizationFilter.html) |
+| port              | [org.apache.shiro.web.filter.authz.PortFilter](http://shiro.apache.org/static/current/apidocs/org/apache/shiro/web/filter/authz/PortFilter.html) |
+| rest              | [org.apache.shiro.web.filter.authz.HttpMethodPermissionFilter](http://shiro.apache.org/static/current/apidocs/org/apache/shiro/web/filter/authz/HttpMethodPermissionFilter.html) |
+| roles             | [org.apache.shiro.web.filter.authz.RolesAuthorizationFilter](http://shiro.apache.org/static/current/apidocs/org/apache/shiro/web/filter/authz/RolesAuthorizationFilter.html) |
+| ssl               | [org.apache.shiro.web.filter.authz.SslFilter](http://shiro.apache.org/static/current/apidocs/org/apache/shiro/web/filter/authz/SslFilter.html) |
+| user              | [org.apache.shiro.web.filter.authc.UserFilter](http://shiro.apache.org/static/current/apidocs/org/apache/shiro/web/filter/authc/UserFilter.html) |
 
-## [启用和禁用过滤器](http://shiro.apache.org/web.html#enabling-and-disabling-filters)
+## 启用和禁用过滤器
 
-与任何过滤器链定义机制（`web.xml`Shiro的INI等）的情况一样，只需将过滤器包含在过滤器链定义中即可启用过滤器，并通过从链定义中删除它来禁用它。
+与其他过滤器链定义机制一样(例如:web.xml, ini配置),  只需要将过滤器包含在过滤器链中,  就可以开启该过滤器,  通过移除过滤器来禁用.
 
-但Shiro 1.2中添加的新功能是能够启用或禁用过滤器而无需将其从过滤器链中移除。如果启用（默认设置），则将按预期过滤请求。如果禁用，则过滤器将允许请求立即传递到下一个元素`FilterChain`。您可以通常基于配置属性触发过滤器的启用状态，或者甚至可以基于*每个请求*触发它。
+但Shiro 1.2 新增了一个功能,  无需从过滤器链中移除过滤器, 即可禁用或起用他们.  如果开启过滤器,  请求会被过滤器拦截,  如果关闭,  filter会允许请求立即直接通过, 到过滤器链中下一个过滤器. 
 
 这是一个强大的概念，因为基于某些要求启用或禁用过滤器通常比更改静态过滤器链定义更为方便，这将是永久且不灵活的。
 
@@ -396,7 +384,7 @@ Shiro通过其[OncePerRequestFilter](http://shiro.apache.org/static/current/apid
 
 * [SHIRO-224](https://issues.apache.org/jira/browse/SHIRO-224)有望为任何过滤器启用此功能，而不仅仅是那些子类`OncePerRequestFilter`。如果这对您很重要，请投票支持该问题。
 
-### [常规启用/禁用](http://shiro.apache.org/web.html#general-enabling-disabling)
+### 常规启用/禁用
 
 的[OncePerRequestFilter](http://shiro.apache.org/static/current/apidocs/org/apache/shiro/web/servlet/OncePerRequestFilter.html)（和所有它的子类的）支持启用/跨所有请求以及基于每个请求基础禁用。
 
@@ -445,7 +433,7 @@ Shiro的[PathMatchingFilter](http://shiro.apache.org/static/current/apidocs/org/
 
 如果使用默认的servlet容器支持，则在Web应用程序的`web.xml`文件中按预期配置会话超时。例如：
 
-```
+```xml
 <session-config>
   <!-- web.xml expects the session timeout in minutes: -->
   <session-timeout>30</session-timeout>
@@ -487,7 +475,7 @@ securityManager.sessionManager = $sessionManager
 - `sessionIdCookieEnabled` （布尔值）
 - `sessionIdCookie`，一个[Cookie](http://shiro.apache.org/static/current/apidocs/org/apache/shiro/web/servlet/Cookie.html)实例。
 
- 
+
 
 Cookie作为模板
 
