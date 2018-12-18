@@ -1,6 +1,6 @@
 # Apache Shiro Web Support
 
-- [配置#配置](/account/** = ssl, authc/account/signup = anon)
+- [配置](/account/** = ssl, authc/account/signup = anon)
   - [`web.xml`](#web.xml)
     - [Shiro 1.2及以后](http://shiro.apache.org/web.html#Web-Shiro1.2andlater)
       - [自定义`WebEnvironment`类](http://shiro.apache.org/web.html#Web-Custom%7B%7BWebEnvironment%7D%7DClass)
@@ -53,7 +53,7 @@
 
  
 
-> **与Spring继承**
+> **集成Spring**
 >
 > Spring Framework用户不会使用本章节介绍的方式。如果您使用Spring，阅读有关[特定](http://shiro.apache.org/spring.html#[[#]]#Spring-WebApplications)于[Spring的Web配置](http://shiro.apache.org/spring.html#[[#]]#Spring-WebApplications)。
 
@@ -378,24 +378,24 @@ authc.loginUrl = /login.jsp
 
 但Shiro 1.2 新增了一个功能,  无需从过滤器链中移除过滤器, 即可禁用或起用他们.  如果开启过滤器,  请求会被过滤器拦截,  如果关闭,  filter会允许请求立即直接通过, 到过滤器链中下一个过滤器. 
 
-这是一个强大的概念，因为基于某些要求启用或禁用过滤器通常比更改静态过滤器链定义更为方便，这将是永久且不灵活的。
+这是一个强大的概念，比起更改固定而且复杂的过滤器链定义,  这种方式在大部分环境下,  启用和禁用过滤器更加方便
 
-Shiro通过其[OncePerRequestFilter](http://shiro.apache.org/static/current/apidocs/org/apache/shiro/web/servlet/OncePerRequestFilter.html)抽象父类完成此操作。Shiro的所有开箱即用的Filter实现都是这一类的子类，因此可以启用或禁用它们，而无需从过滤器链中删除它们。如果您还需要此功能，则可以将此类子类化为您自己的过滤器实现*。
+Shiro通过[OncePerRequestFilter](http://shiro.apache.org/static/current/apidocs/org/apache/shiro/web/servlet/OncePerRequestFilter.html)抽象父类完成此操作。shiro提供的所有的filter实现都是这一类的子类，因此可以启用或禁用它们，而无需从过滤器链中删除它们。如果您还需要此功能，则可以将此类子类化为您自己的过滤器实现*。
 
-* [SHIRO-224](https://issues.apache.org/jira/browse/SHIRO-224)有望为任何过滤器启用此功能，而不仅仅是那些子类`OncePerRequestFilter`。如果这对您很重要，请投票支持该问题。
+* [SHIRO-224](https://issues.apache.org/jira/browse/SHIRO-224)有望为任何过滤器启用此功能，而不仅仅是`OncePerRequestFilter` 的子类。如果这对您很重要，请投票支持该问题。
 
 ### 常规启用/禁用
 
-的[OncePerRequestFilter](http://shiro.apache.org/static/current/apidocs/org/apache/shiro/web/servlet/OncePerRequestFilter.html)（和所有它的子类的）支持启用/跨所有请求以及基于每个请求基础禁用。
+[OncePerRequestFilter](http://shiro.apache.org/static/current/apidocs/org/apache/shiro/web/servlet/OncePerRequestFilter.html)（和所有它的子类）支持启用/跨所有请求以及基于每个请求基础禁用。
 
-通过将其`enabled`属性设置为true或false来完成对所有请求的过滤器的一般启用或禁用。默认设置是`true`因为如果在链中配置了大多数过滤器，则必须执行这些过滤器。
+通过将其`enabled`属性设置为true或false来为所有请求启用或禁用filter。默认设置是`true`因为如果在链中配置了大多数过滤器，则必须执行这些过滤器。
 
 例如，在shiro.ini中：
 
-```
+```ini
 [main]
 ...
-# configure Shiro's default 'ssl' filter to be disabled while testing:
+# 禁用ssl过滤器
 ssl.enabled = false
 
 [urls]
@@ -405,91 +405,107 @@ ssl.enabled = false
 ...
 ```
 
-此示例显示可能有许多URL路径都需要SSL连接必须保护请求。在开发过程中设置SSL可能会令人沮丧且耗时。在开发过程中，您可以禁用ssl过滤器。部署到生产环境时，您可以使用一个配置属性启用它 - 这比手动更改所有URL路径或维护两个Shiro配置要容易得多。
+此示例说明大部属URL路径都需被SSL连接保护,  但是在开发环境中,  设置SSL可能不是很方便,  而且浪费时间. 所以你可以在开发时关闭ssl过滤器.  当部署到生产环境中,  在配饰ssl的enabled属性为true.   这比手动更改URL路径或者设置两个shiro配置要简单的多
 
-### 特定于请求的启用/禁用
+### 基于请求的启用/禁用
 
 `OncePerRequestFilter`实际上确定是否根据其`isEnabled(request, response)`方法启用或禁用过滤器。
 
+![1545104309505](..\image\1545104309505.png)
+
 此方法默认返回`enabled`属性的值，该属性通常用于启用/禁用上述所有请求。如果要根据*请求特定*条件启用或禁用过滤器，可以覆盖该`OncePerRequestFilter` `isEnabled(request,response)`方法以执行更具体的检查。
 
-### 特定于路径的启用/禁用
 
-Shiro的[PathMatchingFilter](http://shiro.apache.org/static/current/apidocs/org/apache/shiro/web/filter/PathMatchingFilter.html)（子类`OncePerRequestFilter`具有根据被过滤的*特定路径*对配置作出反应的能力。这意味着除了传入请求和响应之外，您还可以根据路径和路径特定配置启用或禁用过滤器。
 
-如果您需要能够对匹配路径和特定于路径的配置做出反应来确定是启用还是禁用过滤器，而不是覆盖`OncePerRequestFilter``isEnabled(request,response)`方法，则应覆盖该`PathMatchingFilter` `isEnabled(request,response,path,pathConfig)`方法。
+### 基于路径的启用/禁用
 
-## [会话管理](http://shiro.apache.org/web.html#session-management)
+Shiro的[PathMatchingFilter](http://shiro.apache.org/static/current/apidocs/org/apache/shiro/web/filter/PathMatchingFilter.html)（`OncePerRequestFilter` 的子类) 可以根据需要被过滤的*路径*对配置作出反应。这意味着除了传入请求和响应之外，您还可以根据路径和基于路径的配置启用或禁用过滤器。
 
-### [Servlet容器会话](http://shiro.apache.org/web.html#servlet-container-sessions)
+如果您需要能够对匹配路径和基于路径的配置做出反应来确定是启用还是禁用过滤器，你需要重写`PathMatchingFilter.isEnabled(request,response,path,pathConfig) ` ,  而不是`OncePerRequestFilter.isEnabled(request,response)`.方法。
 
-在Web环境中，Shiro的默认会话管理器[`SessionManager`](http://shiro.apache.org/static/current/apidocs/org/apache/shiro/session/mgt/SessionManager.html)实现是[`ServletContainerSessionManager`](http://shiro.apache.org/static/current/apidocs/org/apache/shiro/web/session/mgt/ServletContainerSessionManager.html)。这个非常简单的实现将所有会话管理职责（包括servlet容器支持的会话集群）委托给运行时Servlet容器。它本质上是Shiro的servlet容器的会话API的桥梁，并且几乎没有。
+## 会话管理
 
-使用此默认值的好处是，使用现有servlet容器会话配置（超时，任何特定于容器的群集机制等）的应用程序将按预期工作。
+### Servlet容器会话
+
+在Web环境中，Shiro默认的会话管理器[`SessionManager`](http://shiro.apache.org/static/current/apidocs/org/apache/shiro/session/mgt/SessionManager.html)实现是[`ServletContainerSessionManager`](http://shiro.apache.org/static/current/apidocs/org/apache/shiro/web/session/mgt/ServletContainerSessionManager.html)。这个非常简单的实现将所有会话管理职责（包括servlet容器支持的会话集群）委托给运行时Servlet容器。它本质上是shiro session API和servlet容器之前的桥梁.
+
+使用这个默认的会话管理好处就是,  可以兼容现在的servelt容器的配置(超时,  或者特定于容器的集群机制等)
 
 这个默认值的缺点是你被绑定到servlet容器的特定会话行为。例如，如果要集群会话，但是在生产中使用Jetty进行测试和使用Tomcat，则特定于容器的配置（或代码）将不可移植。
 
-#### [Servlet容器会话超时](http://shiro.apache.org/web.html#servlet-container-session-timeout)
+#### Servlet容器会话超时
 
-如果使用默认的servlet容器支持，则在Web应用程序的`web.xml`文件中按预期配置会话超时。例如：
+如果使用默认的servlet容器支持，session的过期时间就是在web.xml中配置的时间。例如：
 
 ```xml
 <session-config>
-  <!-- web.xml expects the session timeout in minutes: -->
+  <!-- 30分钟过期, 这是默认值 -->
   <session-timeout>30</session-timeout>
 </session-config>
 ```
 
-### [原生会话](http://shiro.apache.org/web.html#native-sessions)
+> 译者: **什么是Servlet容器?**
+>
+> 就是Tomcat/Jetty/Jboss等
 
-如果您希望会话配置设置和群集可以跨servlet容器移植（例如测试中的Jetty，但生产中的Tomcat或JBoss），或者您希望控制特定的会话/群集功能，则可以启用Shiro的本机会话管理。
+### 原生Session
 
-这里的“Native”一词意味着Shiro自己的企业会话管理实现将用于支持所有`Subject`和`HttpServletRequest`会话并完全绕过servlet容器。但请放心--Shiro直接实现Servlet规范的相关部分，因此任何现有的Web / http相关代码都能按预期工作，并且永远不需要“知道”Shiro透明地管理会话。
+如果你希望你的session配置信息和集群配置可以跨servlet容器或者你希望控制指定的session和集群配置,  你可以使用shiro自带的session.
 
-#### [DefaultWebSessionManager](http://shiro.apache.org/web.html#defaultwebsessionmanager)
+Shiro自己的原生企业会话管理对象将支持所有`Subject`和`HttpServletRequest`会话并完全绕过servlet容器。但请放心--Shiro直接实现Servlet规范的相关部分，因此任何现有的Web / http相关代码都能正常工作，并且永远不需要“知道”Shiro是如何管理会话的。
 
-要为Web应用程序启用本机会话管理，您需要配置一个支持本机Web的会话管理器来覆盖默认的基于servlet容器的会话管理器。您可以通过配置[`DefaultWebSessionManager`](http://shiro.apache.org/static/current/apidocs/org/apache/shiro/web/session/mgt/DefaultWebSessionManager.html)Shiro的实例来实现`SecurityManager`。例如，在`shiro.ini`：
+> **原生session**
+>
+> 这里我们也叫做本地session或者本机session,  就是shiro自己实现的session管理
+
+#### DefaultWebSessionManager
+
+要为Web应用程序启用原生session管理，您需要配置一个支持本机Web的session管理器来覆盖默认的基于servlet容器的session管理器。你可以为`securityManager`配置`DefaultWebSessionManager`。例如，在`shiro.ini` 中：
 
 **shiro.ini本地Web会话管理**
 
-```
+```ini
 [main]
 ...
 sessionManager = org.apache.shiro.web.session.mgt.DefaultWebSessionManager
 # configure properties (like session timeout) here if desired
 
-# Use the configured native session manager:
+# 使用原生会话管理:
 securityManager.sessionManager = $sessionManager
 ```
 
-声明后，您可以`DefaultWebSessionManager`使用本地会话选项配置实例，如会话超时和群集配置，如[会话管理](http://shiro.apache.org/session-management.html)部分中所述。
+声明后，您可以为 `DefaultWebSessionManager` 配置本地会话选项，如会话超时和群集配置，如[会话管理](http://shiro.apache.org/session-management.html)部分中所述。
 
-##### [本机会话超时](http://shiro.apache.org/web.html#native-session-timeout)
+##### 本地session过期
 
-配置`DefaultWebSessionManager`实例后，会话超时的配置如[会话管理：会话超时中所述](http://shiro.apache.org/session-management.html#SessionManagement-sessionTimeout)
+配置`DefaultWebSessionManager`实例后，会话超时的配置如[会话管理：会话超时](http://shiro.apache.org/session-management.html#SessionManagement-sessionTimeout) 中所述
 
-##### [会话Cookie](http://shiro.apache.org/web.html#session-cookie)
+##### 会话Cookie
 
-在`DefaultWebSessionManager`支持两个特定的网络配置属性：
+`DefaultWebSessionManager`支持用于web配置的属性：
 
 - `sessionIdCookieEnabled` （布尔值）
 - `sessionIdCookie`，一个[Cookie](http://shiro.apache.org/static/current/apidocs/org/apache/shiro/web/servlet/Cookie.html)实例。
 
+> **Cookie作为模板**
+>
+> `sessionIdCookie`属性本质上是一个模板.  当您配置了`Cookie`属性，`DefaultWebSessionManager` 会调用`response.addHeader` 方法将设置cookie
+>
+> **DefaultWebSessionManager的属性**
+>
+> ![1545121520729](..\image\1545121520729.png)
+>
+> **Cookie对象(Shiro自己实现的Cookie对象实例)**
+>
+> ![1545122899580](..\image\1545122899580.png)
 
+###### 会话Cookie配置
 
-Cookie作为模板
+DefaultWebSessionManager的`sessionIdCookie`默认实例是 [`SimpleCookie`](http://shiro.apache.org/static/current/apidocs/org/apache/shiro/web/servlet/SimpleCookie.html)。这个简单的实现支持JavaBean风格设置cookie属性
 
-------
+例如，您可以设置Cookie的domain属性：
 
-该`sessionIdCookie`属性本质上是一个模板 - 您配置`Cookie`实例属性，此模板将用于在运行时使用适当的会话ID值设置实际的HTTP`Cookie`标头。
-
-###### [会话Cookie配置](http://shiro.apache.org/web.html#session-cookie-configuration)
-
-DefaultWebSessionManager的`sessionIdCookie`默认实例是a [`SimpleCookie`](http://shiro.apache.org/static/current/apidocs/org/apache/shiro/web/servlet/SimpleCookie.html)。这个简单的实现允许您希望在http Cookie上配置的所有相关属性的JavaBeans样式属性配置。
-
-例如，您可以设置Cookie域：
-
-```
+```ini
 [main]
 ...
 securityManager.sessionManager.sessionIdCookie.domain = foo.com
@@ -497,29 +513,25 @@ securityManager.sessionManager.sessionIdCookie.domain = foo.com
 
 有关其他属性，请参阅[SimpleCookie JavaDoc](http://shiro.apache.org/static/current/apidocs/org/apache/shiro/web/servlet/SimpleCookie.html)。
 
-cookie的默认名称`JSESSIONID`与servlet规范一致。此外，Shiro的cookie支持[`HttpOnly`](https://en.wikipedia.org/wiki/HTTP_cookie#HttpOnly_cookie)旗帜。该`sessionIdCookie`套`HttpOnly`到`true`默认情况下，额外的安全性。
+cookie的默认名称`JSESSIONID`与servlet规范一致。此外，Shiro的cookie支持[`HttpOnly`](https://en.wikipedia.org/wiki/HTTP_cookie#HttpOnly_cookie) 标签。`sessionIdCookie.httpOnly`  默认为`true`
 
- 
+> **注意**
+>
+> 即使在Servlet 2.4和2.5版本中，Shiro的`Cookie`概念也支持`HttpOnly ` 属性（而Servlet API仅在2.6或更高版本中支持它）。
 
-注意
-
-------
-
-即使在Servlet 2.4和2.5环境中，Shiro的`Cookie`概念也支持该`HttpOnly`标志（而Servlet API仅在2.6或更高版本中支持它）。
-
-###### [禁用会话Cookie](http://shiro.apache.org/web.html#disabling-the-session-cookie)
+###### 禁用会话Cookie
 
 如果您不想使用会话cookie，可以通过将`sessionIdCookieEnabled`属性配置为false 来禁用它们。例如：
 
 **禁用本机会话cookie**
 
-```
+```ini
 [main]
 ...
 securityManager.sessionManager.sessionIdCookieEnabled = false
 ```
 
-## [记住我的服务](http://shiro.apache.org/web.html#remember-me-services)
+## 记住我服务
 
 如果`AuthenticationToken`实现[`org.apache.shiro.authc.RememberMeAuthenticationToken`](http://shiro.apache.org/static/current/apidocs/org/apache/shiro/authc/RememberMeAuthenticationToken.html)界面，Shiro将执行'rememberMe'服务。此接口指定一个方法：
 
@@ -608,7 +620,7 @@ securityManager.rememberMeManager.cookie.maxAge = blah
 
 应该注意的是，如果默认的基于cookie的`RememberMeManager`实现不能满足您的需求，您可以插入您喜欢的`securityManager`任何其他对象引用：
 
-```
+```ini
 [main]
 ...
 rememberMeManager = com.my.impl.RememberMeManager
@@ -623,7 +635,7 @@ Apache Shiro提供了一个`Subject`-aware JSP / GSP标记库，允许您根据�
 
 标签库描述符（TLD）文件捆绑`shiro-web.jar`中`META-INF/shiro.tld`的文件。要使用任何标记，请将以下行添加到JSP页面的顶部（或者在您定义页面指令的任何位置）：
 
-```
+```jsp
 <%@ taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
 ```
 
@@ -637,7 +649,7 @@ Apache Shiro提供了一个`Subject`-aware JSP / GSP标记库，允许您根据�
 
 例：
 
-```
+```jsp
 <shiro:guest>
     Hi there!  Please <a href="login.jsp">Login</a> or <a href="signup.jsp">Signup</a> today!
 </shiro:guest>
@@ -651,7 +663,7 @@ Apache Shiro提供了一个`Subject`-aware JSP / GSP标记库，允许您根据�
 
 例：
 
-```
+```jsp
 <shiro:user>
     Welcome back John!  Not John? Click <a href="login.jsp">here<a> to login.
 </shiro:user>
