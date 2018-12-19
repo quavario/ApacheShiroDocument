@@ -2,49 +2,49 @@
 
 - [配置](#配置)
   - [`web.xml`](#webxml)
-    - [Shiro 1.2及以后](#Shiro 1.2及以后)
-      - [自定义`WebEnvironment`类](#自定义WebEnvironment类)
+    - [Shiro 1.2及以后](##shiro-12及以后)
+      - [自定义`WebEnvironment`类](#自定义webenvironment类)
       - [自定义配置位置](#自定义配置位置)
-    - [Shiro 1.1及更早版本](#Shiro 1.1及更早版本)
+    - [Shiro 1.1及更早版本](#shiro-11及更早版本)
       - [自定义路径](#自定义路径)
       - [内联配置](#内联配置)
-  - [Web INI配置](#Web-INI配置)
+  - [Web INI配置](#web-ini配置)
     - [`[urls]`](#url)
       - [过滤链定义](#过滤链定义)
         - [可用过滤器](#可用过滤器)
-- [默认过滤器](http://shiro.apache.org/web.html#Web-DefaultFilters)
+- [默认过滤器](#默认过滤器)
 - [启用和禁用过滤器](#启用和禁用过滤器)
-  - [常规启用/禁用](#常规启用/禁用)
-  - [基于请求的启用/禁用](#基于请求的启用/禁用)
-  - [基于路径的启用/禁用](#基于路径的启用/禁用)
+  - [常规启用/禁用](#常规启用禁用)
+  - [基于请求的启用/禁用](#基于请求的启用禁用)
+  - [基于路径的启用/禁用](#基于路径的启用禁用)
 - [会话管理](#会话管理)
-  - [Servlet容器会话](#Servlet容器会话)
-    - [Servlet容器会话超时](#Servlet容器会话超时)
-  - [原生Session](#原生Session)
-    - [`DefaultWebSessionManager`](#DefaultWebSessionManager)
+  - [Servlet容器会话](#servlet容器会话)
+    - [Servlet容器会话超时](#servlet容器会话超时)
+  - [原生Session](#原生session)
+    - [`DefaultWebSessionManager`](#defaultwebsessionmanager)
       - [本地session过期](#本地session过期)
-      - [会话Cookie](#会话Cookie)
-        - [会话Cookie配置](#会话Cookie配置)
+      - [会话Cookie](#会话cookie)
+        - [会话Cookie配置](#会话cookie配置)
         - [禁用会话cookie](#禁用会话cookie)
 - [记住我服务](#记住我服务)
   - [计划支持](#计划支持)
   - [基于表单的登录](#基于表单的登录)
-  - [Cookie配置](#Cookie配置)
-  - [自定义 `RememberMeManager`](#自定义RememberMeManager)
-- [JSP / GSP标记库](#JSP/GSP标记库)
+  - [Cookie配置](#cookie配置)
+  - [自定义 `RememberMeManager`](#自定义remembermemanager)
+- [JSP / GSP标记库](#jspgsp标记库)
   - [标记库配置](#标记库配置)
   - [`guest`](#guest)
   - [`user`](#user)
   - [`authenticated`](authenticated)
   - [`notAuthenticated`](#notAuthenticated)
   - [`principal`](#principal)
-    - [键入的Principal](#键入的Principal)
-    - [Principal属性](#Principal属性)
-  - [`hasRole`](#hasRole)
-  - [`lacksRole`](#lacksRole)
-  - [`hasAnyRole`](#hasAnyRole)
-  - [`hasPermission`](#hasPermission)
-  - [`lacksPermission`](#lacksPermission)
+    - [键入的Principal](#键入的principal)
+    - [Principal属性](#principal属性)
+  - [`hasRole`](#hasrole)
+  - [`lacksRole`](#lacksrole)
+  - [`hasAnyRole`](#hasanyrole)
+  - [`hasPermission`](#haspermission)
+  - [`lacksPermission`](#lackspermission)
 
 ## 配置
 
@@ -410,7 +410,7 @@ ssl.enabled = false
 
 `OncePerRequestFilter`实际上确定是否根据其`isEnabled(request, response)`方法启用或禁用过滤器。
 
-![1545104309505](..\image\1545104309505.png)
+![1545104309505](../image/1545104309505.png)
 
 此方法默认返回`enabled`属性的值，该属性通常用于启用/禁用上述所有请求。如果要根据*请求特定*条件启用或禁用过滤器，可以覆盖该`OncePerRequestFilter` `isEnabled(request,response)`方法以执行更具体的检查。
 
@@ -492,7 +492,7 @@ securityManager.sessionManager = $sessionManager
 >
 > **DefaultWebSessionManager的属性**
 >
-> ![1545121520729](..\image\1545121520729.png)
+> ![1545121520729](../image/1545121520729.png)
 >
 > **Cookie对象(Shiro自己实现的Cookie对象实例)**
 >
