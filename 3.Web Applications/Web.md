@@ -2,50 +2,49 @@
 
 - [配置](#配置)
   - [`web.xml`](#web.xml)
-    - [Shiro 1.2及以后](http://shiro.apache.org/web.html#Web-Shiro1.2andlater)
-      - [自定义`WebEnvironment`类](http://shiro.apache.org/web.html#Web-Custom%7B%7BWebEnvironment%7D%7DClass)
-      - [自定义配置位置](http://shiro.apache.org/web.html#Web-CustomConfigurationLocations)
-    - [Shiro 1.1及更早版本](http://shiro.apache.org/web.html#Web-Shiro1.1andearlier)
-      - [自定义路径](http://shiro.apache.org/web.html#Web-CustomPath)
-      - [内联配置](http://shiro.apache.org/web.html#Web-InlineConfig)
-  - [Web INI配置](http://shiro.apache.org/web.html#Web-WebINIconfiguration)
-    - [`[urls\]`](http://shiro.apache.org/web.html#Web-%7B%7B%5Curls%5C%7D%7D)
-      - [URL路径表达式](http://shiro.apache.org/web.html#Web-URLPathExpressions)
-      - 过滤链定义
-        - [可用过滤器](http://shiro.apache.org/web.html#Web-AvailableFilters)
+    - [Shiro 1.2及以后](#Shiro 1.2及以后)
+      - [自定义`WebEnvironment`类](#自定义WebEnvironment类)
+      - [自定义配置位置](#自定义配置位置)
+    - [Shiro 1.1及更早版本](#Shiro 1.1及更早版本)
+      - [自定义路径](#自定义路径)
+      - [内联配置](#内联配置)
+  - [Web INI配置](#Web-INI配置)
+    - [`[urls]`](#url)
+      - [过滤链定义](#过滤链定义)
+        - [可用过滤器](#可用过滤器)
 - [默认过滤器](http://shiro.apache.org/web.html#Web-DefaultFilters)
-- 启用和禁用过滤器
-  - [常规启用/禁用](http://shiro.apache.org/web.html#Web-GeneralEnabling%2FDisabling)
-  - [特定于请求的启用/禁用](http://shiro.apache.org/web.html#Web-RequestspecificEnabling%2FDisabling)
-  - [特定于路径的启用/禁用](http://shiro.apache.org/web.html#Web-PathspecificEnabling%2FDisabling)
-- [会话管理](http://shiro.apache.org/web.html#Web-SessionManagement)
-  - [Servlet容器会话](http://shiro.apache.org/web.html#Web-ServletContainerSessions)
-    - [Servlet容器会话超时](http://shiro.apache.org/web.html#Web-ServletContainerSessionTimeout)
-  - [原生会话](http://shiro.apache.org/web.html#Web-NativeSessions)
-    - [`DefaultWebSessionManager`](http://shiro.apache.org/web.html#Web-%7B%7BDefaultWebSessionManager%7D%7D)
-      - [本机会话超时](http://shiro.apache.org/web.html#Web-NativeSessionTimeout)
-      - 会话Cookie
-        - [会话Cookie配置](http://shiro.apache.org/web.html#Web-SessionCookieConfiguration)
-        - [禁用会话Cookie](http://shiro.apache.org/web.html#Web-DisablingtheSessionCookie)
-- [记住我的服务](http://shiro.apache.org/web.html#Web-RememberMeServices)
-  - [计划支持](http://shiro.apache.org/web.html#Web-ProgrammaticSupport)
-  - [基于表单的登录](http://shiro.apache.org/web.html#Web-FormbasedLogin)
-  - [Cookie配置](http://shiro.apache.org/web.html#Web-Cookieconfiguration)
-  - [习惯 `RememberMeManager`](http://shiro.apache.org/web.html#Web-Custom%7B%7BRememberMeManager%7D%7D)
-- [JSP / GSP标记库](http://shiro.apache.org/web.html#Web-JSP%2FGSPTagLibrary)
-  - [标记库配置](http://shiro.apache.org/web.html#Web-TagLibraryConfiguration)
-  - [该`guest`标签](http://shiro.apache.org/web.html#Web-The%7B%7Bguest%7D%7Dtag)
-  - [该`user`标签](http://shiro.apache.org/web.html#Web-The%7B%7Buser%7D%7Dtag)
-  - [该`authenticated`标签](http://shiro.apache.org/web.html#Web-The%7B%7Bauthenticated%7D%7Dtag)
-  - [该`notAuthenticated`标签](http://shiro.apache.org/web.html#Web-The%7B%7BnotAuthenticated%7D%7Dtag)
-  - 该`principal`标签
-    - [键入的主体](http://shiro.apache.org/web.html#Web-Typedprincipal)
-    - [主要财产](http://shiro.apache.org/web.html#Web-Principalproperty)
-  - [该`hasRole`标签](http://shiro.apache.org/web.html#Web-The%7B%7BhasRole%7D%7Dtag)
-  - [该`lacksRole`标签](http://shiro.apache.org/web.html#Web-The%7B%7BlacksRole%7D%7Dtag)
-  - [该`hasAnyRole`标签](http://shiro.apache.org/web.html#Web-The%7B%7BhasAnyRole%7D%7Dtag)
-  - [该`hasPermission`标签](http://shiro.apache.org/web.html#Web-The%7B%7BhasPermission%7D%7Dtag)
-  - [该`lacksPermission`标签](http://shiro.apache.org/web.html#Web-The%7B%7BlacksPermission%7D%7Dtag)
+- [启用和禁用过滤器](#启用和禁用过滤器)
+  - [常规启用/禁用](#常规启用/禁用)
+  - [基于请求的启用/禁用](#基于请求的启用/禁用)
+  - [基于路径的启用/禁用](#基于路径的启用/禁用)
+- [会话管理](#会话管理)
+  - [Servlet容器会话](#Servlet容器会话)
+    - [Servlet容器会话超时](#Servlet容器会话超时)
+  - [原生Session](#原生Session)
+    - [`DefaultWebSessionManager`](#DefaultWebSessionManager)
+      - [本地session过期](#本地session过期)
+      - [会话Cookie](#会话Cookie)
+        - [会话Cookie配置](#会话Cookie配置)
+        - [禁用会话cookie](#禁用会话cookie)
+- [记住我服务](#记住我服务)
+  - [计划支持](#计划支持)
+  - [基于表单的登录](#基于表单的登录)
+  - [Cookie配置](#Cookie配置)
+  - [自定义 `RememberMeManager`](#自定义RememberMeManager)
+- [JSP / GSP标记库](#JSP/GSP标记库)
+  - [标记库配置](#标记库配置)
+  - [`guest`](#guest)
+  - [`user`](#user)
+  - [`authenticated`](authenticated)
+  - [`notAuthenticated`](#notAuthenticated)
+  - [`principal`](#principal)
+    - [键入的Principal](#键入的Principal)
+    - [Principal属性](#Principal属性)
+  - [`hasRole`](#hasRole)
+  - [`lacksRole`](#lacksRole)
+  - [`hasAnyRole`](#hasAnyRole)
+  - [`hasPermission`](#hasPermission)
+  - [`lacksPermission`](#lacksPermission)
 
 ## 配置
 
@@ -57,7 +56,7 @@
 >
 > Spring Framework用户不会使用本章节介绍的方式。如果您使用Spring，阅读有关[特定](http://shiro.apache.org/spring.html#[[#]]#Spring-WebApplications)于[Spring的Web配置](http://shiro.apache.org/spring.html#[[#]]#Spring-WebApplications)。
 
-### [web.xml中](http://shiro.apache.org/web.html#web-xml)
+### web.xml
 
 #### Shiro 1.2及以后
 
@@ -320,7 +319,7 @@ filter1[optional_config1], filter2[optional_config2], ..., filterN[optional_conf
 >
 > 如果您想创建自己的`javax.servlet.Filter`实现,  你可以创建[org.apache.shiro.web.filter.PathMatchingFilter](http://shiro.apache.org/static/current/apidocs/org/apache/shiro/web/filter/PathMatchingFilter.html) 子类
 
-###### [可用过滤器](http://shiro.apache.org/web.html#available-filters)
+###### 可用过滤器
 
 可用于过滤器链定义的过滤器“池”在本`[main]`节中定义。在主要部分中分配给它们的名称是要在过滤器链定义中使用的名称。例如：
 
@@ -545,7 +544,7 @@ boolean isRememberMe();
 >
 > 经常使用的`UsernamePasswordToken`已实现`RememberMeAuthenticationToken`接口并支持rememberMe登录。
 
-### [计划支持](http://shiro.apache.org/web.html#programmatic-support)
+### 计划支持
 
 要以编程方式使用rememberMe，可以将值设置为`true`支持此配置的类。例如，使用标准`UsernamePasswordToken`：
 
@@ -597,7 +596,7 @@ authc.rememberMeParam = somethingOtherThanRememberMe
 ...
 ```
 
-### [Cookie配置](http://shiro.apache.org/web.html#cookie-configuration)
+### Cookie配置
 
 您可以`rememberMe`通过设置默认的{{RememberMeManager}}各种cookie属性来配置cookie的功能。例如，在shiro.ini中：
 
@@ -612,7 +611,7 @@ securityManager.rememberMeManager.cookie.maxAge = blah
 
 请参阅[`CookieRememberMeManager`](http://shiro.apache.org/static/current/apidocs/org/apache/shiro/web/mgt/CookieRememberMeManager.html)支持[`SimpleCookie`](http://shiro.apache.org/static/current/apidocs/src-html/org/apache/shiro/web/servlet/SimpleCookie.html)JavaDoc以获取配置属性。
 
-### 自定义 `RememberMeManager` 
+### 自定义RememberMeManager
 
 应该注意的是，如果默认的基于cookie的`RememberMeManager`实现不能满足您的需求，您可以插入您喜欢的`securityManager`任何其他对象引用：
 
@@ -623,7 +622,7 @@ rememberMeManager = com.my.impl.RememberMeManager
 securityManager.rememberMeManager = $rememberMeManager
 ```
 
-## JSP / GSP标记库
+## JSP/GSP标记库
 
 Apache Shiro提供了一个`Subject`-aware JSP / GSP标记库，允许您根据当前Subject的状态控制JSP，JSTL或GSP页面的输出输入内容。这对于基于查看网页的当前用户的身份和授权状态来个性化视图非常有用。
 
@@ -639,7 +638,7 @@ Apache Shiro提供了一个`Subject`-aware JSP / GSP标记库，允许您根据�
 
 现在我们将介绍每个标记并显示它如何用于呈现页面。
 
-### `guest`
+### guest
 
 `guest`仅当当前`Subject`被视为“访客”时，标签才会显示其包装的内容。客人是所有没有身份的`Subject`。也就是说，我们不知道用户是谁，因为他们没有登录，并且在上次访问网站的时候没够勾选记住我。
 
@@ -653,7 +652,7 @@ Apache Shiro提供了一个`Subject`-aware JSP / GSP标记库，允许您根据�
 
 与`guest`标逻辑相反的是[`user`](http://shiro.apache.org/web.html#Web-usertag)标签。
 
-### `user`
+### user
 
 `user`仅当当前`Subject`被视为“用户”时，标签才会显示其包装内容。这里的"用户"使用指具有已知身份的`subject` ，通过认证或者记住我服务可以赋予已知身份。请注意，此标签与`authenticated` 不完全相同,  后者比前者更具限制性
 
@@ -667,7 +666,7 @@ Apache Shiro提供了一个`Subject`-aware JSP / GSP标记库，允许您根据�
 
 该标签与`guest` 逻辑相反。
 
-### `authenticated`
+### authenticated
 
 仅在当前用户*在其当前会话期间*成功通过身份验证时才显示正文内容。它比'user'标签更具限制性。它在逻辑上与'notAuthenticated'标签相反。
 
@@ -683,7 +682,7 @@ Apache Shiro提供了一个`Subject`-aware JSP / GSP标记库，允许您根据�
 
 该`authenticated`标签与[`notAuthenticated`](http://shiro.apache.org/web.html#Web-notauthenticatedtag)标签 是逻辑相反的。
 
-### `notAuthenticated`
+### notAuthenticated
 
 该`notAuthenticated`如果当前标签将显示它的包裹内容`Subject`已**不**还成功地在本届会议期间通过身份验证。
 
@@ -697,19 +696,19 @@ Apache Shiro提供了一个`Subject`-aware JSP / GSP标记库，允许您根据�
 
 该`notAuthenticated`标签是的逻辑相反的[`authenticated`](http://shiro.apache.org/web.html#Web-authenticatedtag)标签。
 
-### `principal`
+### principal
 
 `principal`标签将输出Subject的[`principal`](http://shiro.apache.org/static/current/apidocs/org/apache/shiro/subject/Subject.html#getPrincipal--)（识别属性），或主要的属性。
 
 如果没有任何标记属性，标记将呈现`toString()`主体的值。例如（假设主体是String用户名）：
 
-```
+```jsp
 Hello, <shiro:principal/>, how are you today?
 ```
 
 这（大部分）相当于以下内容：
 
-```
+```jsp
 Hello, <%= SecurityUtils.getSubject().getPrincipal().toString() %>, how are you today?
 ```
 
@@ -719,7 +718,7 @@ Hello, <%= SecurityUtils.getSubject().getPrincipal().toString() %>, how are you 
 
 例如，假设ID在主要集合中，打印主题的用户ID（而不是用户名）：
 
-```
+```jsp
 User ID: <principal type="java.lang.Integer"/>
 ```
 
@@ -755,7 +754,7 @@ Hello, <shiro:principal type="com.foo.User" property="firstName"/>, how are you 
 Hello, <%= SecurityUtils.getSubject().getPrincipals().oneByType(com.foo.User.class).getFirstName().toString() %>, how are you today?
 ```
 
-### `hasRole`
+### hasRole
 
 只有当前`subject` 具有指定角色是才会显示`hasRole` 标签中的内容
 
@@ -770,7 +769,7 @@ Hello, <%= SecurityUtils.getSubject().getPrincipals().oneByType(com.foo.User.cla
 
 该`hasRole`标签是的逻辑相反[lacksRole](http://shiro.apache.org/web.html#Web-lacksroletag)标签。
 
-### `lacksRole`
+### lacksRole
 
 `lacksRole`仅当未为当前`Subject` **未**分配指定角色时，标记才会显示其包装内容。
 
