@@ -1,6 +1,6 @@
 # Apache Shiro Web Support
 
-- [配置](/account/** = ssl, authc/account/signup = anon)
+- [配置](#配置)
   - [`web.xml`](#web.xml)
     - [Shiro 1.2及以后](http://shiro.apache.org/web.html#Web-Shiro1.2andlater)
       - [自定义`WebEnvironment`类](http://shiro.apache.org/web.html#Web-Custom%7B%7BWebEnvironment%7D%7DClass)
@@ -623,11 +623,11 @@ rememberMeManager = com.my.impl.RememberMeManager
 securityManager.rememberMeManager = $rememberMeManager
 ```
 
-## [JSP / GSP标记库](http://shiro.apache.org/web.html#jsp-gsp-tag-library)
+## JSP / GSP标记库
 
 Apache Shiro提供了一个`Subject`-aware JSP / GSP标记库，允许您根据当前Subject的状态控制JSP，JSTL或GSP页面的输出输入内容。这对于基于查看网页的当前用户的身份和授权状态来个性化视图非常有用。
 
-### [标记库配置](http://shiro.apache.org/web.html#tag-library-configuration)
+### 标记库配置
 
 标签库描述（TLD）文件在`shiro-web.jar`中`META-INF/shiro.tld`的文件。要使用所有标记，请将以下行添加到JSP页面的顶部（或者在您定义页面指令的任何位置）：
 
