@@ -533,9 +533,9 @@ securityManager.sessionManager.sessionIdCookieEnabled = false
 
 ## 记住我服务
 
-如果`AuthenticationToken`实现[`org.apache.shiro.authc.RememberMeAuthenticationToken`](http://shiro.apache.org/static/current/apidocs/org/apache/shiro/authc/RememberMeAuthenticationToken.html)界面，Shiro将执行'rememberMe'服务。此接口指定一个方法：
+如果`AuthenticationToken`实现[`org.apache.shiro.authc.RememberMeAuthenticationToken`](http://shiro.apache.org/static/current/apidocs/org/apache/shiro/authc/RememberMeAuthenticationToken.html) 接口，Shiro将执行'rememberMe'服务。此接口指定一个方法：
 
-```
+```java
 boolean isRememberMe();
 ```
 
