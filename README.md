@@ -23,11 +23,11 @@
    - [x] [加密](https://github.com/quavario/ApacheShiroDocument/blob/master/2.Core/5.Cryptography.md)(11月30日更新)
 3. Web应用
    - [Web](https://github.com/quavario/ApacheShiroDocument/blob/master/3.Web%20Applications/Web.md) (12月19日完成)
-     - [x] 配置
-     - [x] [urls\]（基于路径的安全性）
-     - [x] 默认过滤器
-     - [x] 会话管理
-     - [x] JSP标签库
+     - [x] [配置](https://github.com/quavario/ApacheShiroDocument/blob/master/3.Web%20Applications/Web.md#%E9%85%8D%E7%BD%AE)
+     - [x] [[urls\]（基于路径的安全性）](https://github.com/quavario/ApacheShiroDocument/blob/master/3.Web%20Applications/Web.md#Web-INI%E9%85%8D%E7%BD%AE)
+     - [x] [默认过滤器](http://shiro.apache.org/web.html#Web-DefaultFilters)
+     - [x] [会话管理](https://github.com/quavario/ApacheShiroDocument/blob/master/3.Web%20Applications/Web.md#%E4%BC%9A%E8%AF%9D%E7%AE%A1%E7%90%86)
+     - [x] [JSP标签库](https://github.com/quavario/ApacheShiroDocument/blob/master/3.Web%20Applications/Web.md#JSP/GSP%E6%A0%87%E8%AE%B0%E5%BA%93)
 4. 辅助支持
    - [x] [缓存](https://github.com/quavario/ApacheShiroDocument/blob/master/4.Auxiliary%20Support/1.Caching.md) (12月17日更新)
    - [x] [并发和多线程](https://github.com/quavario/ApacheShiroDocument/blob/master/4.Auxiliary%20Support/2.Concurrency%20%26%20Multithreading.md)
