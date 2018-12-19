@@ -22,7 +22,7 @@
    - [x] [会话管理](https://github.com/quavario/ApacheShiroDocument/blob/master/2.Core/4.Session%20Management.md) (11月30日更新)
    - [x] [加密](https://github.com/quavario/ApacheShiroDocument/blob/master/2.Core/5.Cryptography.md)(11月30日更新)
 3. Web应用
-   - [Web](https://github.com/quavario/ApacheShiroDocument/blob/master/3.Web%20Applications/Web.md)
+   - [Web](https://github.com/quavario/ApacheShiroDocument/blob/master/3.Web%20Applications/Web.md) (12月19日完成)
      - [x] 配置
      - [x] [urls\]（基于路径的安全性）
      - [x] 默认过滤器

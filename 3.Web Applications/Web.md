@@ -533,7 +533,7 @@ securityManager.sessionManager.sessionIdCookieEnabled = false
 
 ## 记住我服务
 
-如果`AuthenticationToken`实现[`org.apache.shiro.authc.RememberMeAuthenticationToken`](http://shiro.apache.org/static/current/apidocs/org/apache/shiro/authc/RememberMeAuthenticationToken.html) 接口，Shiro将执行'rememberMe'服务。此接口指定一个方法：
+如果`AuthenticationToken`  实例实现[`org.apache.shiro.authc.RememberMeAuthenticationToken`](http://shiro.apache.org/static/current/apidocs/org/apache/shiro/authc/RememberMeAuthenticationToken.html) 接口，Shiro将执行'rememberMe'服务。此接口指定一个方法：
 
 ```java
 boolean isRememberMe();
@@ -541,19 +541,15 @@ boolean isRememberMe();
 
 如果此方法返回`true`，Shiro将记住最终用户在会话中的身份。
 
- 
-
-UsernamePasswordToken和RememberMe
-
-------
-
-经常使用的`UsernamePasswordToken`已实现`RememberMeAuthenticationToken`接口并支持rememberMe登录。
+> **UsernamePasswordToken和RememberMe**
+>
+> 经常使用的`UsernamePasswordToken`已实现`RememberMeAuthenticationToken`接口并支持rememberMe登录。
 
 ### [计划支持](http://shiro.apache.org/web.html#programmatic-support)
 
 要以编程方式使用rememberMe，可以将值设置为`true`支持此配置的类。例如，使用标准`UsernamePasswordToken`：
 
-```
+```java
 UsernamePasswordToken token = new UsernamePasswordToken(username, password);
 
 token.setRememberMe(true);
@@ -564,9 +560,9 @@ SecurityUtils.getSubject().login(token);
 
 ### 基于表单的登录
 
-对于Web应用程序，`authc`默认情况下过滤器为a [`FormAuthenticationFilter`](http://shiro.apache.org/static/current/apidocs/org/apache/shiro/web/filter/authc/FormAuthenticationFilter.html)。这支持将“rememberMe”布尔值作为表单/请求参数读取。默认情况下，它期望命名请求参数`rememberMe`。这是一个支持这个的示例shiro.ini配置：
+对于Web应用程序，`authc`默认情况下为过滤器 [`FormAuthenticationFilter`](http://shiro.apache.org/static/current/apidocs/org/apache/shiro/web/filter/authc/FormAuthenticationFilter.html)。这个过滤器将“rememberMe”布尔值作为表单/请求参数读取。默认情况下，它期望命名请求参数`rememberMe`。这是一个支持这个的示例shiro.ini配置：
 
-```
+```ini
 [main]
 authc.loginUrl = /login.jsp
 
@@ -578,7 +574,7 @@ login.jsp = authc
 
 在您的网络表单中，有一个名为“rememberMe”的复选框：
 
-```
+```html
 <form ...>
 
    Username: <input type="text" name="username"/> <br/>
@@ -591,7 +587,7 @@ login.jsp = authc
 
 默认情况下，`FormAuthenticationFilter`会寻找名为请求参数`username`，`password`和`rememberMe`。如果这些与您在表单中使用的表单字段名称不同，则需要在其上配置名称`FormAuthenticationFilter`。例如，在`shiro.ini`：
 
-```
+```ini
 [main]
 ...
 authc.loginUrl = /whatever.jsp
@@ -605,7 +601,7 @@ authc.rememberMeParam = somethingOtherThanRememberMe
 
 您可以`rememberMe`通过设置默认的{{RememberMeManager}}各种cookie属性来配置cookie的功能。例如，在shiro.ini中：
 
-```
+```ini
 [main]
 ...
 
@@ -616,7 +612,7 @@ securityManager.rememberMeManager.cookie.maxAge = blah
 
 请参阅[`CookieRememberMeManager`](http://shiro.apache.org/static/current/apidocs/org/apache/shiro/web/mgt/CookieRememberMeManager.html)支持[`SimpleCookie`](http://shiro.apache.org/static/current/apidocs/src-html/org/apache/shiro/web/servlet/SimpleCookie.html)JavaDoc以获取配置属性。
 
-### 习惯 `RememberMeManager`
+### 自定义 `RememberMeManager` 
 
 应该注意的是，如果默认的基于cookie的`RememberMeManager`实现不能满足您的需求，您可以插入您喜欢的`securityManager`任何其他对象引用：
 
@@ -629,37 +625,37 @@ securityManager.rememberMeManager = $rememberMeManager
 
 ## [JSP / GSP标记库](http://shiro.apache.org/web.html#jsp-gsp-tag-library)
 
-Apache Shiro提供了一个`Subject`-aware JSP / GSP标记库，允许您根据当前Subject的状态控制JSP，JSTL或GSP页面输出。这对于基于查看网页的当前用户的身份和授权状态来个性化视图非常有用。
+Apache Shiro提供了一个`Subject`-aware JSP / GSP标记库，允许您根据当前Subject的状态控制JSP，JSTL或GSP页面的输出输入内容。这对于基于查看网页的当前用户的身份和授权状态来个性化视图非常有用。
 
 ### [标记库配置](http://shiro.apache.org/web.html#tag-library-configuration)
 
-标签库描述符（TLD）文件捆绑`shiro-web.jar`中`META-INF/shiro.tld`的文件。要使用任何标记，请将以下行添加到JSP页面的顶部（或者在您定义页面指令的任何位置）：
+标签库描述（TLD）文件在`shiro-web.jar`中`META-INF/shiro.tld`的文件。要使用所有标记，请将以下行添加到JSP页面的顶部（或者在您定义页面指令的任何位置）：
 
 ```jsp
 <%@ taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
 ```
 
-我们使用`shiro`前缀来指示shiro标记库命名空间，但您可以指定任何您喜欢的名称。
+我们使用`shiro` 作为shiro标记库命名空间，但您可以指定任何您喜欢的名称。
 
 现在我们将介绍每个标记并显示它如何用于呈现页面。
 
-### 该`guest`标签
+### `guest`
 
-`guest`仅当当前`Subject`被视为“访客”时，标签才会显示其包装内容。客人是任何`Subject`没有身份的客人。也就是说，我们不知道用户是谁，因为他们没有登录，并且他们没有被记住（来自记住我的服务）来自之前的站点访问。
+`guest`仅当当前`Subject`被视为“访客”时，标签才会显示其包装的内容。客人是所有没有身份的`Subject`。也就是说，我们不知道用户是谁，因为他们没有登录，并且在上次访问网站的时候没够勾选记住我。
 
 例：
 
 ```jsp
 <shiro:guest>
-    Hi there!  Please <a href="login.jsp">Login</a> or <a href="signup.jsp">Signup</a> today!
+    你好! 请<a href="login.jsp">登录</a> 或者 <a href="signup.jsp">立即注册</a>
 </shiro:guest>
 ```
 
-该`guest`标签是的逻辑相反的[`user`](http://shiro.apache.org/web.html#Web-usertag)标签。
+与`guest`标逻辑相反的是[`user`](http://shiro.apache.org/web.html#Web-usertag)标签。
 
-### 该`user`标签
+### `user`
 
-`user`仅当当前`Subject`被视为“用户”时，标签才会显示其包装内容。此上下文中的“用户”被定义为`Subject`具有已知身份的“用户” ，可以是成功的身份验证，也可以是“RememberMe”服务。请注意，此标记在语义上与经过[身份验证的](http://shiro.apache.org/web.html#Web-authenticatedtag)标记不同，后者比此标记更具限制性。
+`user`仅当当前`Subject`被视为“用户”时，标签才会显示其包装内容。这里的"用户"使用指具有已知身份的`subject` ，通过认证或者记住我服务可以赋予已知身份。请注意，此标签与`authenticated` 不完全相同,  后者比前者更具限制性
 
 例：
 
@@ -669,9 +665,9 @@ Apache Shiro提供了一个`Subject`-aware JSP / GSP标记库，允许您根据�
 </shiro:user>
 ```
 
-该`user`标签是的逻辑相反的[`guest`](http://shiro.apache.org/web.html#Web-guesttag)标签。
+该标签与`guest` 逻辑相反。
 
-### 该`authenticated`标签
+### `authenticated`
 
 仅在当前用户*在其当前会话期间*成功通过身份验证时才显示正文内容。它比'user'标签更具限制性。它在逻辑上与'notAuthenticated'标签相反。
 
@@ -679,21 +675,21 @@ Apache Shiro提供了一个`Subject`-aware JSP / GSP标记库，允许您根据�
 
 例：
 
-```
+```jsp
 <shiro:authenticated>
     <a href="updateAccount.jsp">Update your contact information</a>.
 </shiro:authenticated>
 ```
 
-该`authenticated`标签是的逻辑相反的[`notAuthenticated`](http://shiro.apache.org/web.html#Web-notauthenticatedtag)标签。
+该`authenticated`标签与[`notAuthenticated`](http://shiro.apache.org/web.html#Web-notauthenticatedtag)标签 是逻辑相反的。
 
-### 该`notAuthenticated`标签
+### `notAuthenticated`
 
 该`notAuthenticated`如果当前标签将显示它的包裹内容`Subject`已**不**还成功地在本届会议期间通过身份验证。
 
 例：
 
-```
+```jsp
 <shiro:notAuthenticated>
     Please <a href="login.jsp">login</a> in order to update your credit card information.
 </shiro:notAuthenticated>
@@ -701,9 +697,9 @@ Apache Shiro提供了一个`Subject`-aware JSP / GSP标记库，允许您根据�
 
 该`notAuthenticated`标签是的逻辑相反的[`authenticated`](http://shiro.apache.org/web.html#Web-authenticatedtag)标签。
 
-### 该`principal`标签
+### `principal`
 
-该`principal`标签将输出Subject的[`principal`](http://shiro.apache.org/static/current/apidocs/org/apache/shiro/subject/Subject.html#getPrincipal--)（识别属性），或主要的属性。
+`principal`标签将输出Subject的[`principal`](http://shiro.apache.org/static/current/apidocs/org/apache/shiro/subject/Subject.html#getPrincipal--)（识别属性），或主要的属性。
 
 如果没有任何标记属性，标记将呈现`toString()`主体的值。例如（假设主体是String用户名）：
 
@@ -717,7 +713,7 @@ Hello, <shiro:principal/>, how are you today?
 Hello, <%= SecurityUtils.getSubject().getPrincipal().toString() %>, how are you today?
 ```
 
-#### [键入的主体](http://shiro.apache.org/web.html#typed-principal)
+#### 键入的Principal
 
 该`principal`标签假定默认情况下，校长打印的是`subject.getPrincipal()`价值。但是，如果您想要打印一个*不是*主要主体的值，而是在主体的{ [主要集合中](http://shiro.apache.org/static/current/apidocs/org/apache/shiro/subject/Subject.html#getPrincipals--)打印另一个值，则可以按类型获取该主体并打印该值。
 
@@ -733,81 +729,82 @@ User ID: <principal type="java.lang.Integer"/>
 User ID: <%= SecurityUtils.getSubject().getPrincipals().oneByType(Integer.class).toString() %>
 ```
 
-#### [主要财产](http://shiro.apache.org/web.html#principal-property)
+#### Principal属性
 
 但是，如果主体（上面的默认主要主体或“类型”主体）是复杂对象而不是简单字符串，并且您想引用该主体上的属性，该怎么办？您可以使用该`property`属性指示要读取的属性的名称（必须可通过兼容JavaBeans的getter方法访问）。例如（假设主要主体是User对象）：
 
-```
+```jsp
 Hello, <shiro:principal property="firstName"/>, how are you today?
 ```
 
 这（大部分）相当于以下内容：
 
-```
+```jsp
 Hello, <%= SecurityUtils.getSubject().getPrincipal().getFirstName().toString() %>, how are you today?
 ```
 
 或者，与type属性结合使用：
 
-```
+```jsp
 Hello, <shiro:principal type="com.foo.User" property="firstName"/>, how are you today?
 ```
 
 这大致等同于以下内容：
 
-```
+```jsp
 Hello, <%= SecurityUtils.getSubject().getPrincipals().oneByType(com.foo.User.class).getFirstName().toString() %>, how are you today?
 ```
 
-### 该`hasRole`标签
+### `hasRole`
 
-该`hasRole`标签将显示它的包裹内容只有当电流`Subject`被分配指定的角色。
+只有当前`subject` 具有指定角色是才会显示`hasRole` 标签中的内容
 
 例如：
 
-```
+```jsp
+<!-- 只有当前角色具有administartor角色才会显示系统管理 -->
 <shiro:hasRole name="administrator">
-    <a href="admin.jsp">Administer the system</a>
+    <a href="admin.jsp">系统管理</a>
 </shiro:hasRole>
 ```
 
 该`hasRole`标签是的逻辑相反[lacksRole](http://shiro.apache.org/web.html#Web-lacksroletag)标签。
 
-### 该`lacksRole`标签
+### `lacksRole`
 
 `lacksRole`仅当未为当前`Subject` **未**分配指定角色时，标记才会显示其包装内容。
 
 例如：
 
-```
+```jsp
 <shiro:lacksRole name="administrator">
-    Sorry, you are not allowed to administer the system.
+    对不起,您没有权限访问当前系统
 </shiro:lacksRole>
 ```
 
 该`lacksRole`标签是的逻辑相反[hasRole](http://shiro.apache.org/web.html#Web-hasroletag)标签。
 
-### 该`hasAnyRole`标签
+### `hasAnyRole`
 
 该`hasAnyRole`如果当前标签会显示它的包裹内容`Subject`被分配*任何*指定的角色从一个逗号分隔的角色名称列表。
 
 例如：
 
-```
+```jsp
 <shiro:hasAnyRoles name="developer, project manager, administrator">
-    You are either a developer, project manager, or administrator.
+    你可能是个程序员,项目经理,或者管理员
 </shiro:hasAnyRoles>
 ```
 
 该`hasAnyRole`标签目前还没有一个逻辑相反的标签。
 
-### 该`hasPermission`标签
+### `hasPermission`
 
 `hasPermission`仅当当前`Subject`“具有”（暗示）指定的权限时，标记才会显示其包装内容。也就是说，用户具有指定的能力。
 
 例如：
 
-```
+```jsp
 <shiro:hasPermission name="user:create">
     <a href="createUser.jsp">Create a new User</a>
 </shiro:hasPermission>
@@ -815,13 +812,13 @@ Hello, <%= SecurityUtils.getSubject().getPrincipals().oneByType(com.foo.User.cla
 
 该`hasPermission`标签是的逻辑相反[lacksPermission](http://shiro.apache.org/web.html#Web-lackspermissiontag)标签。
 
-### 该`lacksPermission`标签
+### `lacksPermission`
 
 `lacksPermission`仅当当前`Subject` **DOES没有**（暗示）指定的权限时，标记才会显示其包装内容。也就是说，用户**没有**指定的能力。
 
 例如：
 
-```
+```jsp
 <shiro:lacksPermission name="user:delete">
     Sorry, you are not allowed to delete user accounts.
 </shiro:lacksPermission>
